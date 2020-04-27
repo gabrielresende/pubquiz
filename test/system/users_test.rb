@@ -16,7 +16,6 @@ class UsersTest < ApplicationSystemTestCase
 
     fill_in "Access hash", with: @user.access_hash
     fill_in "Name", with: @user.name
-    fill_in "Points", with: @user.points
     click_on "Create User"
 
     assert_text "User was successfully created"
@@ -29,7 +28,6 @@ class UsersTest < ApplicationSystemTestCase
 
     fill_in "Access hash", with: @user.access_hash
     fill_in "Name", with: @user.name
-    fill_in "Points", with: @user.points
     click_on "Update User"
 
     assert_text "User was successfully updated"

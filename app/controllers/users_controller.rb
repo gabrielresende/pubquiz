@@ -1,10 +1,27 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
+  skip_before_action :verify_authenticity_token, only: [:update_me]
 
   # GET /users
   # GET /users.json
   def index
     @users = User.all
+  end
+  
+  # GET /me
+  def me
+    @user = current_user
+    render :show
+  end
+
+  # PATCH /me
+  def update_me
+    @user = current_user
+    if @user.update(user_params)
+      format.json { render :show, status: :ok, location: @user }
+    else
+      format.json { render json: @user.errors, status: :unprocessable_entity }
+    end
   end
 
   # GET /users/1
@@ -69,6 +86,6 @@ class UsersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.require(:user).permit(:name, :access_hash, :points)
+      params.require(:user).permit(:name, :access_hash)
     end
 end

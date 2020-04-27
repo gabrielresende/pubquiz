@@ -3,7 +3,6 @@ class CreateUsers < ActiveRecord::Migration[6.0]
     create_table :users, id: :uuid do |t|
       t.string :name
       t.string :access_hash, index: true
-      t.integer :points
 
       t.timestamps
     end

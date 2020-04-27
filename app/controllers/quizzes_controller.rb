@@ -10,6 +10,7 @@ class QuizzesController < ApplicationController
 
   # GET /quizzes/1/play
   def play
+    @quiz.players << current_user unless @quiz.players.include?(current_user)
   end
 
   # GET /quizzes/1
