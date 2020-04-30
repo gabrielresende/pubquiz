@@ -1,16 +1,2 @@
-<p id="notice"><%= notice %></p>
-
-<p>
-  <strong>Name:</strong>
-  <%= @quiz.name %>
-</p>
-
-<h3>Players</h3>
-<ul>
-  <% @quiz.players.each do |player| %>
-    <li>(<%= player.id.first(8) %>) <%= player.name %></li>
-  <% end %>
-</ul>
-
-<%= link_to 'Edit', edit_quiz_path(@quiz) %> |
-<%= link_to 'Back', quizzes_path %>
+<div id="gameinfo" quiz_id="<%= @quiz.id %>" quiz_name="<%= @quiz.name %>"></div>
+<%= javascript_pack_tag 'host/index' %>

@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import Cookies from 'js-cookie';
 
-const User = ({ setUserName }) => {
+const User = ({ setPlayerName }) => {
   const [name, setName] = useState(undefined);
-  const userHash = Cookies.get('access_hash');
   
   function onKeyDownHandler(e) {
     if (e.keyCode === 13) {
@@ -12,20 +10,11 @@ const User = ({ setUserName }) => {
   }
 
   function submitName() {
-    const data = {
-      name
-    };
-    
     fetch('/me.json', {
-        method: 'PATCH',
-        body: JSON.stringify(data),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }).then(res => {
-      console.log('res', res);
-      setUserName(name);
-    }).catch(err => err);
+      method: 'PATCH',
+      body: JSON.stringify({ name }),
+      headers: { 'Content-Type': 'application/json' },
+    }).then(res => setPlayerName(name)).catch(err => err);
   }
   
   return (

@@ -18,7 +18,7 @@ class UsersController < ApplicationController
   def update_me
     @user = current_user
     if @user.update(user_params)
-      format.json { render :show, status: :ok, location: @user }
+      render nothing: true, status: :ok
     else
       format.json { render json: @user.errors, status: :unprocessable_entity }
     end

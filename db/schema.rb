@@ -34,6 +34,16 @@ ActiveRecord::Schema.define(version: 2020_04_27_171329) do
     t.index ["category_id"], name: "index_questions_on_category_id"
   end
 
+  create_table "quiz_players", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "quiz_id", null: false
+    t.uuid "player_id", null: false
+    t.integer "status", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["player_id"], name: "index_quiz_players_on_player_id"
+    t.index ["quiz_id"], name: "index_quiz_players_on_quiz_id"
+  end
+
   create_table "quizzes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.uuid "owner_id", null: false
@@ -56,5 +66,7 @@ ActiveRecord::Schema.define(version: 2020_04_27_171329) do
   end
 
   add_foreign_key "questions", "categories"
+  add_foreign_key "quiz_players", "quizzes"
+  add_foreign_key "quiz_players", "users", column: "player_id"
   add_foreign_key "quizzes", "users", column: "owner_id"
 end
