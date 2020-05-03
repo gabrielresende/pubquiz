@@ -16,19 +16,28 @@ const Game = ({ cableApp, initialPlayerName, quizId }) => {
       { channel: "QuizChannel", id: quizId },
       { 
         connected: () => install(),
+        disconnected: () => uninstall(),
         received: data => handleDataReceived(data),
       }
       );
     }, []);
     
   function install() {
-    window.addEventListener("focus", () => updateStatus("online"));
-    window.addEventListener("blur", () => updateStatus("away"));
-    document.addEventListener("visibilitychange", () => updateStatus(document.visibilityState === "visible" ? "online" : "away"));
+    window.addEventListener("focus", updateStatus);
+    window.addEventListener("blur", updateStatus);
+    document.addEventListener("visibilitychange", updateStatus);
   }
 
-  function updateStatus(status) {
-    console.log('updating status', status);
+  function uninstall() {
+    window.removeEventListener("focus", updateStatus);
+    window.removeEventListener("blur", updateStatus);
+    document.removeEventListener("visibilitychange", updateStatus);
+  }
+
+  function updateStatus() {
+    const documentIsActive = document.visibilityState == "visible" && document.hasFocus();
+    const status = documentIsActive ? 'online' : 'away';
+    
     cableApp.quiz.perform("update_user_status", { status });
   }
 
