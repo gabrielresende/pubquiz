@@ -1,6 +1,6 @@
 import React from 'react';
-import styled from 'styled-components'
-import { InlineForm, Input } from './components'
+import styled from 'styled-components';
+import { InlineForm, Input, VerticalRadio } from './components';
 
 const Container = styled.div`
   background-color: white;
@@ -16,17 +16,27 @@ const QuestionLabel = styled.span`
   margin-bottom: 20px;
 `;
 
-const Question = ({ question, handleAnswer }) => (
-  <Container>
-    <QuestionLabel>{question}</QuestionLabel>
-    <InlineForm>
-      <Input
-        type="text"
-        onChange={e => handleAnswer(e.target.value)}
-        placeholder="Type your answer here"
-      />
-    </InlineForm>
-  </Container>
+const OpenAnswerForm = ({ handleAnswer }) => (
+  <InlineForm>
+    <Input
+      type="text"
+      onChange={e => handleAnswer(e.target.value)}
+      placeholder="Type your answer here"
+    />
+  </InlineForm>
 );
+
+const Question = ({ question, handleAnswer }) => {
+  console.log(question);
+  return (
+    <Container>
+      <QuestionLabel>{question.title}</QuestionLabel>
+      {question.options
+        ? <VerticalRadio options={question.options} handleAnswer={handleAnswer} />
+        : <OpenAnswerForm handleAnswer={handleAnswer} />
+      }
+    </Container>
+  );
+}
 
 export default Question;

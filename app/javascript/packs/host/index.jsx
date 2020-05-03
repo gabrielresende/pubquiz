@@ -2,10 +2,51 @@ import React, { useState, useEffect, useReducer } from 'react';
 import ReactDOM from 'react-dom';
 import Answers from './answers';
 import Question from './question';
+import Questions from './questions';
 
 import { createConsumer } from "@rails/actioncable"
 const CableApp = {};
 CableApp.cable = createConsumer();
+
+const questions = [
+  {
+    id: 1,
+    title: 'Question A?',
+    answer: 'A',
+    points: 2,
+    time: 60,
+  },
+  {
+    id: 2,
+    title: 'Question B?',
+    answer: '76',
+    points: 2,
+    time: 60,
+  },
+  {
+    id: 3,
+    title: 'Question C?',
+    options: ['28', '30', '32', '33'],
+    answer: '33',
+    points: 2,
+    time: 60,
+  },
+  {
+    id: 4,
+    title: "Question D?",
+    options: ['Abc', 'Def', 'Ghi', 'Jkl'],
+    answer: 'Def',
+    points: 2,
+    time: 60,
+  },
+  {
+    id: 5,
+    title: 'Question E?',
+    answer: 'E',
+    points: 2,
+    time: 60,
+  },
+];
 
 const loadPlayers = (quizId) => {
   return new Promise((resolve, reject) => {
@@ -69,6 +110,7 @@ const Host = ({ cableApp, quizId, quizName }) => {
     <div>
       <h1>Quiz {quizName}</h1>
       <Players players={players} />
+      <Questions questions={questions} sendQuestion={sendQuestion} />
       <Question sendQuestion={sendQuestion} />
       { answers ? <Answers players={players} answers={answers} /> : null }
     </div>

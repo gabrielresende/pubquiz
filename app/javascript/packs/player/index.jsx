@@ -58,7 +58,8 @@ const Game = ({ cableApp, initialPlayerName, quizId, quizName }) => {
   function handleDataReceived(data) {
     if (data.data_type == 'question') {
       setQuestion(data.question);
-      setTimeout(() => setQuestion(null), 20000);
+      const delay = (data.question.time || 20) * 1000;
+      setTimeout(() => setQuestion(null), delay);
     }
   }
 
