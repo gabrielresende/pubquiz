@@ -29,6 +29,8 @@ const Question = ({ title, answer, points, time, sendQuestion }) => (
 );
 
 const Questions = ({ questions, sendQuestion }) => {
+  const [question, setQuestion] = useState(undefined);
+
   return (
     <Container>
       <table>
@@ -60,7 +62,7 @@ const Questions = ({ questions, sendQuestion }) => {
           onChange={e => setQuestion(e.target.value)}
         />
         <button
-          onClick={() => sendQuestion(question)}
+          onClick={() => sendQuestion({ id: 'open', title: question, time: 60 })}
         >
           Send question
         </button>

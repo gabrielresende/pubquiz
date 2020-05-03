@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { InlineForm, Input, VerticalRadio } from './components';
 
@@ -27,9 +27,37 @@ const OpenAnswerForm = ({ handleAnswer }) => (
 );
 
 const Question = ({ question, handleAnswer }) => {
-  console.log(question);
+  const duration = (question.time || 60) * 1000
+  const expiration = Date.now() + duration;
+  const [timeLeft, setTimeLeft] = useState(formatTime(duration - 1000));
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const elapsed = expiration - new Date().getTime();
+
+      setTimeLeft(formatTime(elapsed));
+
+      if (elapsed < 0) {
+        setTimeLeft(null);
+        clearInterval(interval);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  function formatTime(miliseconds) {
+    const minutes = Math.floor(miliseconds / (1000 * 60));
+    const seconds = Math.floor((miliseconds % (1000 * 60)) / 1000);
+
+    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  }
+
   return (
     <Container>
+      {timeLeft ? (
+        <div>{timeLeft}</div>  
+      ) : null}
       <QuestionLabel>{question.title}</QuestionLabel>
       {question.options
         ? <VerticalRadio options={question.options} handleAnswer={handleAnswer} />
