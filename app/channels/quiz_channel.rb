@@ -22,6 +22,12 @@ class QuizChannel < ApplicationCable::Channel
     QuizPlayer.find_or_create_by(quiz: quiz, player: current_user).update(status: data['status'].to_sym)
   end
 
+  def remove_player(data)
+    if quiz.owner == current_user
+      QuizPlayer.find_by(quiz: quiz, player_id: data['player_id'])&.destroy
+    end
+  end
+
   def unsubscribed
     unless current_user == quiz.owner
       QuizPlayer.find_by(quiz: quiz, player: current_user).update(status: 'offline')

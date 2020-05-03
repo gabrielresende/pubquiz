@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import ReactDOM from 'react-dom';
 import Answers from './answers';
-import Question from './question';
 import Questions from './questions';
+import Players from './players';
 
 import { createConsumer } from "@rails/actioncable"
 const CableApp = {};
@@ -59,21 +59,15 @@ const loadPlayers = (quizId) => {
   })
 };
 
-const Players = ({ players }) => {
-  return (
-    <div>
-      <h3>Players</h3>
-      <ul>
-        {players.sort((a,b) => a.player_name.localeCompare(b.player_name)).map(player => (
-          <li key={player.player_id}>{player.player_name} ({player.status})</li>
-        ))}
-      </ul>
-    </div>
-  );
-};
-
-function playerReducer(state, data) {
-  return [data, ...state.filter(item => item.player_id !== data.player_id)];
+function playerReducer(state, action) {
+  switch (action.type) {
+    case 'add':
+      return [action.payload, ...state.filter(item => item.player_id !== action.payload.player_id)];
+    case 'reset':
+      return action.payload;
+    default:
+      throw new Error();
+  }
 }
 
 const Host = ({ cableApp, quizId, quizName }) => {
@@ -81,9 +75,7 @@ const Host = ({ cableApp, quizId, quizName }) => {
   const [answers, updateAnswer] = useReducer(playerReducer, []);
 
   useEffect(() => {
-    loadPlayers(quizId)
-      .then(res => res.map(p => updatePlayer(p)))
-      .catch((e) => console.log('Error loading players', e));
+    refreshPlayers()
   }, []);
 
   useEffect(() => {
@@ -93,12 +85,18 @@ const Host = ({ cableApp, quizId, quizName }) => {
     );
   }, []);
 
+  function refreshPlayers() {
+    loadPlayers(quizId)
+      .then(payload => updatePlayer({type: 'reset', payload}))
+      .catch((e) => console.log('Error loading players', e));
+  }
+
   function handleDataReceived(data) {
     if (data.data_type == 'player') {
-      updatePlayer(data);
+      updatePlayer({type: 'add', payload: data});
     }
     if (data.data_type == 'answer') {
-      updateAnswer(data);
+      updateAnswer({type: 'add', payload: data});
     }
   }
 
@@ -106,12 +104,16 @@ const Host = ({ cableApp, quizId, quizName }) => {
     cableApp.quiz.perform("send_question", { question });
   }
 
+  function removePlayer(playerId) {
+    cableApp.quiz.perform("remove_player", { player_id: playerId });
+    setTimeout(() => refreshPlayers(), 200);
+  }
+
   return (
     <div>
       <h1>Quiz {quizName}</h1>
-      <Players players={players} />
+      <Players players={players} removePlayer={removePlayer} />
       <Questions questions={questions} sendQuestion={sendQuestion} />
-      <Question sendQuestion={sendQuestion} />
       { answers ? <Answers players={players} answers={answers} /> : null }
     </div>
   );
