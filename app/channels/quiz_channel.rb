@@ -11,14 +11,10 @@ class QuizChannel < ApplicationCable::Channel
   end
 
   def send_question(data)
-    puts "Cheguei no Send Question!!!"
-    puts "Data: #{data.inspect}"
     ActionCable.server.broadcast "questions_for_quiz_#{params[:id]}", data_type: 'question', question: data['question']
   end
 
   def send_answer(data)
-    puts "Cheguei no Send Answer!!!"
-    puts "Data: #{data.inspect}"
     ActionCable.server.broadcast "answers_for_quiz_#{params[:id]}", data_type: 'answer', player_id: current_user.id, answer: data['answer']
   end
 
@@ -27,7 +23,6 @@ class QuizChannel < ApplicationCable::Channel
   end
 
   def unsubscribed
-    # Any cleanup needed when channel is unsubscribed
     unless current_user == quiz.owner
       QuizPlayer.find_by(quiz: quiz, player: current_user).update(status: 'offline')
     end

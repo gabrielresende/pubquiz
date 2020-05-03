@@ -79,9 +79,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const node = document.getElementById('gameinfo');
   const quizId = node.getAttribute('quiz_id')
   const quizName = node.getAttribute('quiz_name')
+  const reactRoot = document.body.appendChild(document.createElement('div'))
+  reactRoot.setAttribute("id", "root")
 
   ReactDOM.render(
     <Host cableApp={CableApp} quizId={quizId} quizName={quizName} />,
-    document.body.appendChild(document.createElement('div')),
+    reactRoot,
   )
 })

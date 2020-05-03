@@ -1,13 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
+import styled from 'styled-components'
 import User from './user';
 import Question from './question';
-
 import { createConsumer } from "@rails/actioncable"
+
 const CableApp = {};
 CableApp.cable = createConsumer();
 
-const Game = ({ cableApp, initialPlayerName, quizId }) => {
+const Wrapper = styled.div`
+  background-color: #fcfcfc;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  @media (max-width: 768px) {
+    padding: 0;
+  }
+`;
+
+const Game = ({ cableApp, initialPlayerName, quizId, quizName }) => {
   const [playerName, setPlayerName] = useState(initialPlayerName);
   const [question, setQuestion] = useState(undefined);
   
@@ -52,30 +66,41 @@ const Game = ({ cableApp, initialPlayerName, quizId }) => {
     cableApp.quiz.perform("send_answer", { answer })
   }
 
-  if (!playerName) {
-    return (
-      <User setPlayerName={setPlayerName} />
-    );
-  }
-
   return (
-    <div>
-      <div>Hello {playerName}!</div>
-      {question
-        ? <Question question={question} handleAnswer={handleAnswer} />
-        : <div>Awaiting the start of the game</div>
+    <Wrapper>
+      {playerName
+        ? (question
+          ? <Question question={question} handleAnswer={handleAnswer} />
+          : (
+            <div>
+              <div>Hello {playerName}!</div>
+              <div>Waiting for the next question...</div>
+            </div>  
+          )
+        )
+        : (
+          <User quizName={quizName} setPlayerName={setPlayerName} />
+        )
       }
-    </div>  
+    </Wrapper>
   );
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   const node = document.getElementById('gameinfo');
   const quizId = node.getAttribute('quiz_id')
+  const quizName = node.getAttribute('quiz_name')
   const playerName = node.getAttribute('player_name')
+  const reactRoot = document.body.appendChild(document.createElement('div'))
+  reactRoot.setAttribute("id", "root")
   
   ReactDOM.render(
-    <Game cableApp={CableApp} quizId={quizId} initialPlayerName={playerName} />,
-    document.body.appendChild(document.createElement('div')),
+    <Game
+      cableApp={CableApp}
+      quizId={quizId}
+      quizName={quizName}
+      initialPlayerName={playerName}
+    />,
+    reactRoot,
   )
 })

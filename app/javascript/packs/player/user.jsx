@@ -1,6 +1,20 @@
 import React, { useState } from 'react';
+import styled from 'styled-components'
+import { InlineForm, Input, Button } from './components'
 
-const User = ({ setPlayerName }) => {
+const Container = styled.div`
+  background-color: white;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  padding: 20px;
+`;
+
+const Title = styled.span`
+  font-size: 18pt;
+  font-weight: bold;
+`;
+
+const User = ({ quizName, setPlayerName }) => {
   const [name, setName] = useState(undefined);
   
   function onKeyDownHandler(e) {
@@ -18,25 +32,25 @@ const User = ({ setPlayerName }) => {
   }
   
   return (
-    <div>
-      <h3>Hello!</h3>
+    <Container>
+      <Title>Welcome to {quizName}</Title>
       <p>Please type your name to continue</p>
-      <div>
-        <input
+      <InlineForm>
+        <Input
           type="text"
           onChange={e => setName(e.target.value)}
           onKeyDown={onKeyDownHandler}
           placeholder="Your name"
         />
-        <button
+        <Button
           type="button"
+          primary
           onClick={() => submitName(name)}
         >
           Join
-        </button>
-      </div>
-
-    </div>
+        </Button>
+      </InlineForm>
+    </Container>
   );
 }
 

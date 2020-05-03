@@ -2,6 +2,8 @@ class QuizzesController < ApplicationController
   before_action :set_quiz, only: [:show, :edit, :update, :destroy]
   before_action :set_play_quiz, only: [:play, :players]
 
+  layout 'react', only: [:play, :show]
+
   # GET /quizzes
   # GET /quizzes.json
   def index
@@ -12,8 +14,6 @@ class QuizzesController < ApplicationController
   def play
     quiz_player = QuizPlayer.find_or_create_by(quiz: @quiz, player: current_user)
     @player_name = current_user.name
-    
-    ActionCable.server.broadcast "user_status_for_#{@quiz.id}", user_id: current_user.id, user_name: current_user.name || 'Visitor', status: quiz_player.status
   end
 
   # GET /quizzes/1/players
