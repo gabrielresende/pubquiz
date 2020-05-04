@@ -48,7 +48,7 @@ const PageLayout = ({ quizName, players, removePlayer, questions, sendQuestion }
           title={quizName}
         />
         <QuizDetails>
-          <Row>
+          <Row gutter={16}>
             <Col sm={6} xs={24}><Players players={players} removePlayer={removePlayer} /></Col>
             <Col sm={18} xs={24}>
               <Questions questions={questions} sendQuestion={sendQuestion} />
