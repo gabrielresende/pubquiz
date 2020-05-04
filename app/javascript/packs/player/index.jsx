@@ -9,7 +9,6 @@ const CableApp = {};
 CableApp.cable = createConsumer();
 
 const Wrapper = styled.div`
-  background-color: #fcfcfc;
   display: flex;
   flex: 1;
   flex-direction: column;

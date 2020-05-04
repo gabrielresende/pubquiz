@@ -1,8 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import ReactDOM from 'react-dom';
-import Answers from './answers';
-import Questions from './questions';
-import Players from './players';
+import Layout from './layout';
 
 import { createConsumer } from "@rails/actioncable"
 const CableApp = {};
@@ -110,12 +108,14 @@ const Host = ({ cableApp, quizId, quizName }) => {
   }
 
   return (
-    <div>
-      <h1>Quiz {quizName}</h1>
-      <Players players={players} removePlayer={removePlayer} />
-      <Questions questions={questions} sendQuestion={sendQuestion} />
-      { answers ? <Answers players={players} answers={answers} /> : null }
-    </div>
+    <Layout
+      quizName={quizName}
+      players={players}
+      removePlayer={removePlayer}
+      questions={questions}
+      sendQuestion={sendQuestion}
+      answers={answers}
+    />
   );
 }
 
