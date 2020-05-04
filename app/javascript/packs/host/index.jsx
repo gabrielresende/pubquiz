@@ -44,7 +44,7 @@ const questions = [
     title: 'Question E?',
     answer: 'E',
     points: 2,
-    time: 60,
+    time: 10,
   },
 ];
 

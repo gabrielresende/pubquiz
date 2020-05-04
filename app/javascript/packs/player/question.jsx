@@ -9,6 +9,19 @@ const Container = styled.div`
   padding: 20px;
 `;
 
+const QuestionInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  color: #ccc;
+`;
+
+const Divider = styled.hr`
+  border: 1px dashed #eee;
+  border-style: none none dashed; 
+  color: #fff;
+  background-color: #fff;
+`;
+
 const QuestionLabel = styled.span`
   display: inline-block;
   font-size: 18pt;
@@ -55,9 +68,11 @@ const Question = ({ question, handleAnswer }) => {
 
   return (
     <Container>
-      {timeLeft ? (
+      <QuestionInfo>
+        <div>{question.points || 1} pt{(question.points > 1) ? 's' : null}</div>
         <div>{timeLeft}</div>  
-      ) : null}
+      </QuestionInfo>
+      <Divider />
       <QuestionLabel>{question.title}</QuestionLabel>
       {question.options
         ? <VerticalRadio options={question.options} handleAnswer={handleAnswer} />
