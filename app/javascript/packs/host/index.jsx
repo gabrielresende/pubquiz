@@ -6,7 +6,7 @@ import { createConsumer } from "@rails/actioncable"
 const CableApp = {};
 CableApp.cable = createConsumer();
 
-const questions = [
+const rootQuestions = [
   {
     id: 1,
     title: 'Question A?',
@@ -68,9 +68,20 @@ function playerReducer(state, action) {
   }
 }
 
+function createUUID(){
+  var dt = new Date().getTime();
+  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = (dt + Math.random()*16)%16 | 0;
+      dt = Math.floor(dt/16);
+      return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+  });
+  return uuid;
+}
+
 const Host = ({ cableApp, quizId, quizName }) => {
   const [players, updatePlayer] = useReducer(playerReducer, []);
   const [answers, updateAnswer] = useReducer(playerReducer, []);
+  const [questions, addQuestion] = useReducer((state, question) => ([...state, {id: createUUID(), ...question}]), rootQuestions);
 
   useEffect(() => {
     refreshPlayers()
@@ -115,6 +126,7 @@ const Host = ({ cableApp, quizId, quizName }) => {
       questions={questions}
       sendQuestion={sendQuestion}
       answers={answers}
+      addQuestion={addQuestion}
     />
   );
 }
