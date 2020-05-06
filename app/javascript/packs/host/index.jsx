@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Layout from './layout';
 
@@ -31,11 +31,11 @@ const rootQuestions = [
   },
   {
     id: 4,
-    title: "Question D?",
-    options: ['Abc', 'Def', 'Ghi', 'Jkl'],
+    title: "Qual a cor do cavalo branco de napoleão?",
+    options: ['Marrom', 'Verde', 'Branco', 'Amarelo'],
     answer: 'Def',
     points: 2,
-    time: 60,
+    time: 30,
   },
   {
     id: 5,
@@ -78,10 +78,33 @@ function createUUID(){
   return uuid;
 }
 
+var answersExample = [
+  {
+    player_id: '7da64dc2-c09d-4476-bd70-5a8a07366539',
+    answers: [
+      {question_id: 'a49805a8-b745-4f54-9748-85a5d636c406', answer: 'bla', points: 10},
+      {question_id: '062c4406-535f-41e9-9eca-15a949d04cef', answer: '28', points: 0},
+    ]
+  }
+]
+
+var scoreExample = [
+  {
+    player_id: '7da64dc2-c09d-4476-bd70-5a8a07366539',
+    score: 23,
+  },
+  {
+    player_id: 'a49805a8-b745-4f54-9748-85a5d636c406',
+    score: 18,
+  }
+]
+
 const Host = ({ cableApp, quizId, quizName }) => {
+  const [answers, setAnswers] = useState([]);
+  const [score, setScore] = useState([]);
   const [players, updatePlayer] = useReducer(playerReducer, []);
-  const [answers, updateAnswer] = useReducer(playerReducer, []);
   const [questions, addQuestion] = useReducer((state, question) => ([...state, {id: createUUID(), ...question}]), rootQuestions);
+  const [roundAnswers, updateRoundAnswer] = useReducer(playerReducer, []);
 
   useEffect(() => {
     refreshPlayers()
@@ -105,12 +128,18 @@ const Host = ({ cableApp, quizId, quizName }) => {
       updatePlayer({type: 'add', payload: data});
     }
     if (data.data_type == 'answer') {
-      updateAnswer({type: 'add', payload: data});
+      updateRoundAnswer({type: 'add', payload: data});
     }
   }
 
   function sendQuestion(question) {
+    updateRoundAnswer({type: 'reset', payload: []});
     cableApp.quiz.perform("send_question", { question });
+  }
+
+  function closeQuestion() {
+    updateRoundAnswer({type: 'reset', payload: []});
+    cableApp.quiz.perform("close_question");
   }
 
   function removePlayer(playerId) {
@@ -118,15 +147,51 @@ const Host = ({ cableApp, quizId, quizName }) => {
     setTimeout(() => refreshPlayers(), 200);
   }
 
+  function registerAnswers(roundData) {
+    const newAnswers = [...answers];
+    roundData.forEach(data => {
+      const ansObj = newAnswers.find(item => item.player_id === data.player_id);
+      if (ansObj) {
+        ansObj['answers'].push({
+          question_id: data.question_id,
+          answer: data.answer,
+          points: data.points,
+        })
+      } else {
+        newAnswers.push({
+          player_id: data.player_id,
+          answers: [{
+            question_id: data.question_id,
+            answer: data.answer,
+            points: data.points,
+          }]
+        })
+      }
+    });
+
+    const newScore = newAnswers.map(answer => ({
+      player_id: answer.player_id,
+      score: answer.answers.reduce((sum, item) => sum + item.points, 0)
+    }))
+    
+    console.log(newAnswers);
+    console.log('newScore', newScore);
+    setAnswers(newAnswers);
+    setScore(newScore);
+  }
+
   return (
     <Layout
       quizName={quizName}
       players={players}
+      score={score}
       removePlayer={removePlayer}
       questions={questions}
       sendQuestion={sendQuestion}
-      answers={answers}
+      roundAnswers={roundAnswers}
       addQuestion={addQuestion}
+      closeQuestion={closeQuestion}
+      registerAnswers={registerAnswers}
     />
   );
 }

@@ -55,10 +55,21 @@ const Game = ({ cableApp, initialPlayerName, quizId, quizName }) => {
   }
 
   function handleDataReceived(data) {
-    if (data.data_type == 'question') {
-      setQuestion(data.question);
-      const delay = (data.question.time || 20) * 1000;
-      setTimeout(() => setQuestion(null), delay);
+    switch (data.data_type) {
+      case 'question':
+        setQuestion(data.question);
+        const delay = (data.question.time || 20) * 1000;
+        setTimeout(() => setQuestion(null), delay);
+        return;
+      case 'close_question':
+        setQuestion(null);
+        var id = window.setTimeout(function() {}, 0);
+        while (id--) {
+          window.clearTimeout(id);
+        }
+        return;
+      default:
+        return;
     }
   }
 

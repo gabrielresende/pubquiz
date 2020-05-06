@@ -32,17 +32,27 @@ const PlayerName = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   margin-left: 10px;
+  flex: 1;
+`;
+
+const PlayerScore = styled.span`
+  margin-left: 5px;
+  margin-right: 5px;
+  color: #999;
+  font-style: italic;
+  text-align: right;
 `;
 
 const PlayerActions = styled.div`
   margin-right: 10px;
 `;
 
-const Player = ({ player, removePlayer }) => (
+const Player = ({ player, removePlayer, score }) => (
   <PlayerContainer>
     <PlayerAvatarName>
       <PlayerBadge player={player} />
       <PlayerName>{player.player_name}</PlayerName>
+      <PlayerScore>{score}</PlayerScore>
     </PlayerAvatarName>
     <PlayerActions>
       <Tooltip title="Remove">
@@ -70,7 +80,12 @@ const PlayerBadge = ({ player }) => (
   </Badge>
 );
 
-const Players = ({ players, removePlayer }) => {
+const Players = ({ players, removePlayer, score }) => {
+  function scoreFor(playerId) {
+    const playerScore = score.find(item => item.player_id === playerId);
+    return playerScore ? playerScore.score : 0;
+  }
+
   return (
     <Container>
       <h3>Players</h3>
@@ -78,6 +93,7 @@ const Players = ({ players, removePlayer }) => {
         <Player
           key={player.player_id}
           player={player}
+          score={scoreFor(player.player_id)}
           removePlayer={removePlayer}
         />
       ))}

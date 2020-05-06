@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Button, Modal, Table, Form, Input, InputNumber } from 'antd';
 import { SendOutlined } from '@ant-design/icons';
+import Answers from './answers';
 
 const QuestionsTitle = styled.div`
   display: flex;
@@ -56,13 +57,35 @@ const QuestionModal = ({
   );
 }
 
-const Questions = ({ questions, sendQuestion, addQuestion }) => {
+const Questions = ({
+  addQuestion,
+  closeQuestion,
+  questions,
+  players,
+  sendQuestion,
+  roundAnswers,
+  registerAnswers,
+}) => {
   const [customQuestion, setCustomQuestion] = useState(undefined);
   const [modalVisible, setModalVisible] = useState(false);
+  const [answersModalVisible, setAnswersModalVisible] = useState(false);
+  const [question, setQuestion] = useState(undefined)
 
   function handleCreateQuestion(question) {
     addQuestion(question)
     setModalVisible(false);
+  }
+
+  function handleSendQuestion(question) {
+    sendQuestion(question);
+    setQuestion(question);
+    setAnswersModalVisible(true);
+    // TODO: Mark question as sent somewhere
+  }
+
+  function handleCloseQuestion() {
+    setQuestion(null);
+    closeQuestion();
   }
 
   const columns = [
@@ -95,7 +118,7 @@ const Questions = ({ questions, sendQuestion, addQuestion }) => {
             type="primary"
             shape="round"
             icon={<SendOutlined />}
-            onClick={() => sendQuestion(record)}
+            onClick={() => handleSendQuestion(record)}
           >
             Send
           </Button>
@@ -127,7 +150,7 @@ const Questions = ({ questions, sendQuestion, addQuestion }) => {
           onChange={e => setCustomQuestion(e.target.value)}
         />
         <button
-          onClick={() => sendQuestion({ id: 'open', title: customQuestion, time: 60 })}
+          onClick={() => handleSendQuestion({ id: 'open', title: customQuestion, time: 60 })}
         >
           Send question
         </button>
@@ -137,6 +160,21 @@ const Questions = ({ questions, sendQuestion, addQuestion }) => {
         handleCancel={() => setModalVisible(false)}
         createQuestion={handleCreateQuestion}
       />
+      {answersModalVisible
+        ? (
+          <Answers
+            visible={answersModalVisible}
+            hideModal={() => setAnswersModalVisible(false)}
+            question={question}
+            players={players}
+            roundAnswers={roundAnswers}
+            questionId={question.id}
+            registerAnswers={registerAnswers}
+            closeQuestion={handleCloseQuestion}
+          />
+        )
+        : null
+      }
     </div>
   );
 };

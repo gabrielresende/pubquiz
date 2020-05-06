@@ -14,6 +14,10 @@ class QuizChannel < ApplicationCable::Channel
     ActionCable.server.broadcast "questions_for_quiz_#{params[:id]}", data_type: 'question', question: data['question']
   end
 
+  def close_question(data)
+    ActionCable.server.broadcast "questions_for_quiz_#{params[:id]}", data_type: 'close_question'
+  end
+
   def send_answer(data)
     ActionCable.server.broadcast "answers_for_quiz_#{params[:id]}", data_type: 'answer', player_id: current_user.id, answer: data['answer']
   end
