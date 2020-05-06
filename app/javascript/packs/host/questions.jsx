@@ -58,7 +58,7 @@ const QuestionModal = ({
 }
 
 const Questions = ({
-  addQuestion,
+  updateQuestions,
   closeQuestion,
   questions,
   players,
@@ -72,7 +72,7 @@ const Questions = ({
   const [question, setQuestion] = useState(undefined)
 
   function handleCreateQuestion(question) {
-    addQuestion(question)
+    updateQuestions({type: 'add', question});
     setModalVisible(false);
   }
 
@@ -80,6 +80,7 @@ const Questions = ({
     sendQuestion(question);
     setQuestion(question);
     setAnswersModalVisible(true);
+    updateQuestions({type: 'edit', question: { ...question, sent: true }});
     // TODO: Mark question as sent somewhere
   }
 
@@ -108,6 +109,14 @@ const Questions = ({
       title: 'Time (s)',
       dataIndex: 'time',
       key: 'time',
+    },
+    {
+      title: 'Sent',
+      dataIndex: 'sent',
+      key: 'sent',
+      render: (_, record) => (
+        <div>{record.sent ? "Yes" : "No"}</div>
+      ),
     },
     {
       title: 'Actions',

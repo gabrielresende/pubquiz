@@ -42,7 +42,7 @@ const PageLayout = ({
   questions,
   registerAnswers,
   sendQuestion,
-  addQuestion,
+  updateQuestions,
   closeQuestion,
 }) => {
   return (
@@ -67,7 +67,7 @@ const PageLayout = ({
               <Questions
                 questions={questions}
                 sendQuestion={sendQuestion}
-                addQuestion={addQuestion}
+                updateQuestions={updateQuestions}
                 closeQuestion={closeQuestion}
                 players={players}
                 roundAnswers={roundAnswers}

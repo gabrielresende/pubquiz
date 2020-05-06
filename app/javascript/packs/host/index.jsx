@@ -99,11 +99,24 @@ var scoreExample = [
   }
 ]
 
+function questionReducer(state, action) {
+  switch (action.type) {
+    case 'add':
+      return [...state, {id: createUUID(), ...action.question}];
+    case 'edit':
+      return [...state.filter(question => question.id !== action.question.id), action.question];
+    case 'reset':
+      return [action.payload];
+    default:
+      throw new Error();
+  }
+}
+
 const Host = ({ cableApp, quizId, quizName }) => {
   const [answers, setAnswers] = useState([]);
   const [score, setScore] = useState([]);
   const [players, updatePlayer] = useReducer(playerReducer, []);
-  const [questions, addQuestion] = useReducer((state, question) => ([...state, {id: createUUID(), ...question}]), rootQuestions);
+  const [questions, updateQuestions] = useReducer(questionReducer, rootQuestions);
   const [roundAnswers, updateRoundAnswer] = useReducer(playerReducer, []);
 
   useEffect(() => {
@@ -189,7 +202,7 @@ const Host = ({ cableApp, quizId, quizName }) => {
       questions={questions}
       sendQuestion={sendQuestion}
       roundAnswers={roundAnswers}
-      addQuestion={addQuestion}
+      updateQuestions={updateQuestions}
       closeQuestion={closeQuestion}
       registerAnswers={registerAnswers}
     />
