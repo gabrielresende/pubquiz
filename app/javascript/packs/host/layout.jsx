@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Col, Row } from 'antd';
 import Questions from './questions';
 import Players from './players';
-
-import 'antd/dist/antd.css';
-import './host.css';
 
 import { PageHeader } from 'antd';
 
