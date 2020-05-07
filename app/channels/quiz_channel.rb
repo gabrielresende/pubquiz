@@ -32,6 +32,20 @@ class QuizChannel < ApplicationCable::Channel
     end
   end
 
+  def update_questions(data)
+    if quiz.owner == current_user
+      quiz.questions = data['questions']
+      quiz.save
+    end
+  end
+
+  def update_answers(data)
+    if quiz.owner == current_user
+      quiz.answers = data['answers']
+      quiz.save
+    end
+  end
+
   def unsubscribed
     unless current_user == quiz.owner
       QuizPlayer.find_by(quiz: quiz, player: current_user).update(status: 'offline')

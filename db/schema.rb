@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_27_171329) do
+ActiveRecord::Schema.define(version: 2020_05_07_103157) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -49,6 +49,8 @@ ActiveRecord::Schema.define(version: 2020_04_27_171329) do
     t.uuid "owner_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.jsonb "questions", default: []
+    t.jsonb "answers", default: []
     t.index ["owner_id"], name: "index_quizzes_on_owner_id"
   end
 

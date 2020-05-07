@@ -6,68 +6,6 @@ import { createConsumer } from "@rails/actioncable"
 const CableApp = {};
 CableApp.cable = createConsumer();
 
-const rootQuestions = [
-  {
-    id: 1,
-    title: 'Question A?',
-    answer: 'A',
-    points: 2,
-    time: 60,
-  },
-  {
-    id: 2,
-    title: 'Question B?',
-    answer: '76',
-    points: 2,
-    time: 60,
-  },
-  {
-    id: 3,
-    title: 'Question C?',
-    options: ['28', '30', '32', '33'],
-    answer: '33',
-    points: 2,
-    time: 60,
-  },
-  {
-    id: 4,
-    title: "Qual a cor do cavalo branco de napoleão?",
-    options: ['Marrom', 'Verde', 'Branco', 'Amarelo'],
-    answer: 'Def',
-    points: 2,
-    time: 30,
-  },
-  {
-    id: 5,
-    title: 'Question E?',
-    answer: 'E',
-    points: 2,
-    time: 10,
-  },
-];
-
-const loadPlayers = (quizId) => {
-  return new Promise((resolve, reject) => {
-    fetch(`/quizzes/${quizId}/players.json`)
-    .then(res => res.json())
-    .then(
-      (result) => resolve(result),
-      (error) => reject(error)
-    );
-  })
-};
-
-function playerReducer(state, action) {
-  switch (action.type) {
-    case 'add':
-      return [action.payload, ...state.filter(item => item.player_id !== action.payload.player_id)];
-    case 'reset':
-      return action.payload;
-    default:
-      throw new Error();
-  }
-}
-
 function createUUID(){
   var dt = new Date().getTime();
   var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -78,49 +16,58 @@ function createUUID(){
   return uuid;
 }
 
-var answersExample = [
-  {
-    player_id: '7da64dc2-c09d-4476-bd70-5a8a07366539',
-    answers: [
-      {question_id: 'a49805a8-b745-4f54-9748-85a5d636c406', answer: 'bla', points: 10},
-      {question_id: '062c4406-535f-41e9-9eca-15a949d04cef', answer: '28', points: 0},
-    ]
-  }
-]
-
-var scoreExample = [
-  {
-    player_id: '7da64dc2-c09d-4476-bd70-5a8a07366539',
-    score: 23,
-  },
-  {
-    player_id: 'a49805a8-b745-4f54-9748-85a5d636c406',
-    score: 18,
-  }
-]
-
-function questionReducer(state, action) {
-  switch (action.type) {
-    case 'add':
-      return [...state, {id: createUUID(), ...action.question}];
-    case 'edit':
-      return [...state.filter(question => question.id !== action.question.id), action.question];
-    case 'reset':
-      return [action.payload];
-    default:
-      throw new Error();
-  }
-}
-
-const Host = ({ cableApp, quizId, quizName }) => {
-  const [answers, setAnswers] = useState([]);
+const Host = ({
+  cableApp,
+  quizAnswers,
+  quizId,
+  quizName,
+  quizPlayers,
+  quizQuestions
+}) => {
+  const [answers, setAnswers] = useState(quizAnswers);
   const [score, setScore] = useState([]);
-  const [players, updatePlayer] = useReducer(playerReducer, []);
-  const [questions, updateQuestions] = useReducer(questionReducer, rootQuestions);
-  const [roundAnswers, updateRoundAnswer] = useReducer(playerReducer, []);
+  const [players, updatePlayer] = useReducer(playerReducer, quizPlayers);
+  const [questions, updateQuestions] = useReducer(questionReducer, quizQuestions);
+  const [roundAnswers, updateRoundAnswer] = useReducer(playerReducer, quizPlayers);
+
+  function questionReducer(state, action) {
+    let newQuestions;
+    switch (action.type) {
+      case 'add':
+        newQuestions = [...state, {id: createUUID(), ...action.question}];
+        cableApp.quiz.perform("update_questions", { questions: newQuestions });
+        return newQuestions;
+      case 'edit':
+        newQuestions = [...state.filter(question => question.id !== action.question.id), action.question];
+        cableApp.quiz.perform("update_questions", { questions: newQuestions });
+        return newQuestions;
+      case 'reset':
+        return [action.payload];
+      default:
+        throw new Error();
+    }
+  }
+
+  function playerReducer(state, action) {
+    let newPlayers;
+    switch (action.type) {
+      case 'add':
+        return [action.payload, ...state.filter(item => item.player_id !== action.payload.player_id)];
+      case 'remove':
+        newPlayers = [...state.filter(item => item.player_id !== action.playerId)];
+        cableApp.quiz.perform("remove_player", { player_id: playerId });
+        return newPlayers;
+      case 'reset':
+        return action.payload;
+      default:
+        throw new Error();
+    }
+  }
 
   useEffect(() => {
-    refreshPlayers()
+    console.log('quizAnswers', quizAnswers);
+    console.log('quizPlayers', quizPlayers);
+    console.log('quizQuestions', quizQuestions);
   }, []);
 
   useEffect(() => {
@@ -130,11 +77,15 @@ const Host = ({ cableApp, quizId, quizName }) => {
     );
   }, []);
 
-  function refreshPlayers() {
-    loadPlayers(quizId)
-      .then(payload => updatePlayer({type: 'reset', payload}))
-      .catch((e) => console.log('Error loading players', e));
-  }
+  useEffect(() => {
+    const newScore = answers.map(answer => ({
+      player_id: answer.player_id,
+      score: answer.answers.reduce((sum, item) => sum + item.points, 0)
+    }));
+    
+    console.log('newScore', newScore);
+    setScore(newScore);
+  }, [answers]);
 
   function handleDataReceived(data) {
     if (data.data_type == 'player') {
@@ -156,8 +107,7 @@ const Host = ({ cableApp, quizId, quizName }) => {
   }
 
   function removePlayer(playerId) {
-    cableApp.quiz.perform("remove_player", { player_id: playerId });
-    setTimeout(() => refreshPlayers(), 200);
+    updatePlayer({type: 'remove', playerId });
   }
 
   function registerAnswers(roundData) {
@@ -182,15 +132,9 @@ const Host = ({ cableApp, quizId, quizName }) => {
       }
     });
 
-    const newScore = newAnswers.map(answer => ({
-      player_id: answer.player_id,
-      score: answer.answers.reduce((sum, item) => sum + item.points, 0)
-    }))
-    
     console.log(newAnswers);
-    console.log('newScore', newScore);
+    cableApp.quiz.perform("update_answers", { answers: newAnswers });
     setAnswers(newAnswers);
-    setScore(newScore);
   }
 
   return (
@@ -211,13 +155,23 @@ const Host = ({ cableApp, quizId, quizName }) => {
 
 document.addEventListener('DOMContentLoaded', () => {
   const node = document.getElementById('gameinfo');
-  const quizId = node.getAttribute('quiz_id')
-  const quizName = node.getAttribute('quiz_name')
+  const quizAnswers = JSON.parse(node.getAttribute('quiz_answers'));
+  const quizId = node.getAttribute('quiz_id');
+  const quizName = node.getAttribute('quiz_name');
+  const quizPlayers = JSON.parse(node.getAttribute('quiz_players'));
+  const quizQuestions = JSON.parse(node.getAttribute('quiz_questions'));
   const reactRoot = document.body.appendChild(document.createElement('div'))
   reactRoot.setAttribute("id", "root")
 
   ReactDOM.render(
-    <Host cableApp={CableApp} quizId={quizId} quizName={quizName} />,
+    <Host
+      cableApp={CableApp}
+      quizAnswers={quizAnswers}
+      quizId={quizId}
+      quizName={quizName}
+      quizPlayers={quizPlayers}
+      quizQuestions={quizQuestions}
+    />,
     reactRoot,
   )
 })

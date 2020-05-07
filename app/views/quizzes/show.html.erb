@@ -1,4 +1,11 @@
 <%= stylesheet_link_tag 'host', media: 'all', 'data-turbolinks-track': 'reload' %>
 
-<div id="gameinfo" quiz_id="<%= @quiz.id %>" quiz_name="<%= @quiz.name %>"></div>
+<div
+  id="gameinfo"
+  quiz_id="<%= @quiz.id %>"
+  quiz_name="<%= @quiz.name %>"
+  quiz_answers="<%= @quiz.answers.to_json %>"
+  quiz_questions="<%= @quiz.questions.to_json %>"
+  quiz_players="<%= @quiz.quiz_players.includes(:player).to_json(only: [:id, :player_id, :status], methods: [:player_name]) %>"
+></div>
 <%= javascript_pack_tag 'host/index' %>
