@@ -23,6 +23,7 @@ const Wrapper = styled.div`
 const Game = ({ cableApp, initialPlayerName, quizId, quizName }) => {
   const [playerName, setPlayerName] = useState(initialPlayerName);
   const [question, setQuestion] = useState(undefined);
+  const [status, setStatus] = useState(documentIsActive() ? 'online' : 'away');
   
   useEffect(() => {
     cableApp.quiz = cableApp.cable.subscriptions.create(
@@ -32,9 +33,13 @@ const Game = ({ cableApp, initialPlayerName, quizId, quizName }) => {
         disconnected: () => uninstall(),
         received: data => handleDataReceived(data),
       }
-      );
-    }, []);
-    
+    );
+  }, []);
+
+  useEffect(() => {
+    cableApp.quiz.perform("update_user_status", { status });
+  }, [status]);
+
   function install() {
     window.addEventListener("focus", updateStatus);
     window.addEventListener("blur", updateStatus);
@@ -48,10 +53,11 @@ const Game = ({ cableApp, initialPlayerName, quizId, quizName }) => {
   }
 
   function updateStatus() {
-    const documentIsActive = document.visibilityState == "visible" && document.hasFocus();
-    const status = documentIsActive ? 'online' : 'away';
-    
-    cableApp.quiz.perform("update_user_status", { status });
+    setStatus(documentIsActive() ? 'online' : 'away')
+  }
+
+  function documentIsActive() {
+    return document.visibilityState == "visible" && document.hasFocus()
   }
 
   function handleDataReceived(data) {
@@ -74,7 +80,7 @@ const Game = ({ cableApp, initialPlayerName, quizId, quizName }) => {
   }
 
   function handleAnswer(answer) {
-    cableApp.quiz.perform("send_answer", { answer })
+    cableApp.quiz.perform("send_answer", { answer });
   }
 
   return (
