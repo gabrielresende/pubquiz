@@ -76,7 +76,11 @@ const Player = ({ player, removePlayer, score }) => (
 
 const PlayerBadge = ({ player }) => (
   <Badge color={{online: 'lime', away: 'yellow', offline: 'red'}[player.status]} dot>
-    <Avatar size="small" icon={<UserOutlined />} />
+    <Avatar
+      size="small"
+      style={{ backgroundColor: {online: '#a0d911', away: '#fadb14', offline: '#f5222d'}[player.status] }}
+      icon={<UserOutlined />}
+    />
   </Badge>
 );
 
