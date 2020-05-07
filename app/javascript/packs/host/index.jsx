@@ -82,8 +82,6 @@ const Host = ({
       player_id: answer.player_id,
       score: answer.answers.reduce((sum, item) => sum + item.points, 0)
     }));
-    
-    console.log('newScore', newScore);
     setScore(newScore);
   }, [answers]);
 
@@ -132,7 +130,6 @@ const Host = ({
       }
     });
 
-    console.log(newAnswers);
     cableApp.quiz.perform("update_answers", { answers: newAnswers });
     setAnswers(newAnswers);
   }

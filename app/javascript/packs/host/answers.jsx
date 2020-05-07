@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Modal, Input, InputNumber } from 'antd';
+import { Descriptions, Modal, Input, InputNumber } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 const InlineContainer = styled.div`
@@ -56,12 +56,37 @@ const Answers = ({
   closeQuestion,
   hideModal,
   players,
-  questionId,
+  question,
   roundAnswers,
   visible,
   registerAnswers,
 }) => {
   const [points, setPoints] = useState({});
+  const duration = (question.time || 60) * 1000
+  const expiration = Date.now() + duration;
+  const [timeLeft, setTimeLeft] = useState(formatTime(expiration - Date.now()));
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const elapsed = expiration - Date.now();
+
+      setTimeLeft(formatTime(elapsed));
+
+      if (elapsed < 0) {
+        setTimeLeft('0:00');
+        clearInterval(interval);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  function formatTime(miliseconds) {
+    const minutes = Math.floor(miliseconds / (1000 * 60));
+    const seconds = Math.floor((miliseconds % (1000 * 60)) / 1000);
+
+    return `${minutes}:${String(seconds).padStart(2, '0')}`;
+  }
 
   function updatePoints(playerId, value) {
     setPoints({...points, [playerId]: value});
@@ -71,7 +96,7 @@ const Answers = ({
     return roundAnswers.map(answer => (
       {
         player_id: answer.player_id,
-        question_id: questionId,
+        question_id: question.id,
         answer: answer.answer,
         points: points[answer.player_id] || 0,
       }
@@ -79,6 +104,22 @@ const Answers = ({
   }
 
   function handleRegisterRound() {
+    if (Date.now() > expiration) {
+      registerRound();
+      return;
+    }
+
+    Modal.confirm({
+      title: 'Submit questions?',
+      icon: <ExclamationCircleOutlined />,
+      content: 'There is still time left to answer this question. Submit answers and close question?',
+      onOk() {
+        registerRound();
+      },
+    });
+  }
+
+  function registerRound() {
     registerAnswers(processRound());
     closeQuestion();
     hideModal();
@@ -108,6 +149,12 @@ const Answers = ({
       maskClosable={false}
       destroyOnClose
     >
+      <Descriptions>
+        <Descriptions.Item label="Time left">{timeLeft}</Descriptions.Item>
+        <Descriptions.Item label="Answer">{question.answer}</Descriptions.Item>
+        <Descriptions.Item label="Points">{question.points}</Descriptions.Item>
+      </Descriptions>
+
       {players.map(player => (
         <PlayerAnswer
           key={player.player_id}

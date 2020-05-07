@@ -80,11 +80,11 @@ const Questions = ({
   }
 
   function handleSendQuestion(question) {
-    sendQuestion(question);
-    setQuestion(question);
+    const { answer, ...rawQuestion } = question;
+    sendQuestion(rawQuestion);
+    setQuestion({...question, sent_at: Date.now});
     setAnswersModalVisible(true);
-    updateQuestions({type: 'edit', question: { ...question, sent: true }});
-    // TODO: Mark question as sent somewhere
+    updateQuestions({type: 'edit', question: { ...question, sent_at: Date.now() }});
   }
 
   function handleCloseQuestion() {
@@ -118,7 +118,7 @@ const Questions = ({
       dataIndex: 'sent',
       key: 'sent',
       render: (_, record) => (
-        <div>{record.sent ? "Yes" : "No"}</div>
+        <div>{record.sent_at ? "Yes" : "No"}</div>
       ),
     },
     {
@@ -180,7 +180,6 @@ const Questions = ({
             question={question}
             players={players}
             roundAnswers={roundAnswers}
-            questionId={question.id}
             registerAnswers={registerAnswers}
             closeQuestion={handleCloseQuestion}
           />

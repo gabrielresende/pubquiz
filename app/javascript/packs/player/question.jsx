@@ -55,9 +55,8 @@ const QuestionImage = ({ url }) => (
 );
 
 const Question = ({ question, handleAnswer }) => {
-  const duration = (question.time || 60) * 1000
-  const expiration = Date.now() + duration;
-  const [timeLeft, setTimeLeft] = useState(formatTime(duration - 1000));
+  const expiration = Date.now() + (question.time || 60) * 1000;
+  const [timeLeft, setTimeLeft] = useState(formatTime(expiration - Date.now()));
 
   useEffect(() => {
     const interval = setInterval(() => {
