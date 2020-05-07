@@ -33,21 +33,21 @@ const User = ({ quizName, setPlayerName }) => {
   
   return (
     <Container>
-      <Title>Welcome to {quizName}</Title>
-      <p>Please type your name to continue</p>
+      <Title>Bem-vindo ao {quizName}</Title>
+      <p>Digite seu nome para continuar</p>
       <InlineForm>
         <Input
           type="text"
           onChange={e => setName(e.target.value)}
           onKeyDown={onKeyDownHandler}
-          placeholder="Your name"
+          placeholder="Seu nome"
         />
         <Button
           type="button"
           primary
           onClick={() => submitName(name)}
         >
-          Join
+          Entrar
         </Button>
       </InlineForm>
     </Container>
