@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Avatar, Badge, Button, Modal, Tooltip } from 'antd';
-import { DeleteOutlined, ExclamationCircleOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Modal, Tooltip } from 'antd';
+import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { PlayerAvatarName, PlayerBadge, PlayerName } from './components';
 
 const { confirm } = Modal;
 
@@ -16,23 +17,7 @@ const PlayerContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-`;
-
-const PlayerAvatarName = styled.div`
-  display: flex;
-  align-items: center;
-  flex: 1;
-  overflow: hidden;
-  height: 24pt;
-`;
-
-const PlayerName = styled.span`
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-left: 10px;
-  flex: 1;
+  margin-bottom: 4px;
 `;
 
 const PlayerScore = styled.span`
@@ -72,16 +57,6 @@ const Player = ({ player, removePlayer, score }) => (
       </Tooltip>
     </PlayerActions>
   </PlayerContainer>
-);
-
-const PlayerBadge = ({ player }) => (
-  <Badge color={{online: 'lime', away: 'yellow', offline: 'red'}[player.status]} dot>
-    <Avatar
-      size="small"
-      style={{ backgroundColor: {online: '#a0d911', away: '#fadb14', offline: '#f5222d'}[player.status] }}
-      icon={<UserOutlined />}
-    />
-  </Badge>
 );
 
 const Players = ({ players, removePlayer, score }) => {

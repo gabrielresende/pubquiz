@@ -92,7 +92,7 @@ const Question = ({ question, handleAnswer }) => {
         ? <QuestionImage url={question.image_url} />
         : null
       }
-      {question.options
+      {Array.isArray(question.options) && question.options.length
         ? <VerticalRadio options={question.options} handleAnswer={handleAnswer} />
         : <OpenAnswerForm handleAnswer={handleAnswer} />
       }

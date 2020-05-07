@@ -1,15 +1,33 @@
 import React from 'react';
-import styled from 'styled-components'
+import styled from 'styled-components';
+import { Avatar, Badge } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 
-const Button = styled.button`
-  /* Adapt the colors based on primary prop */
-  background: ${props => props.primary ? "palevioletred" : "white"};
-  color: ${props => props.primary ? "white" : "palevioletred"};
-
-  font-size: 1em;
-  padding: 0.25em 1em;
-  border: 2px solid palevioletred;
-  border-radius: 3px;
+const PlayerAvatarName = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 1;
+  overflow: hidden;
+  height: 24pt;
 `;
 
-export { Button };
+const PlayerName = styled.span`
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: 10px;
+  flex: 1;
+`;
+
+const PlayerBadge = ({ player }) => (
+  <Badge color={{online: 'lime', away: 'yellow', offline: 'red'}[player.status]} dot>
+    <Avatar
+      size="small"
+      style={{ backgroundColor: {online: '#a0d911', away: '#fadb14', offline: '#f5222d'}[player.status] }}
+      icon={<UserOutlined />}
+      />
+  </Badge>
+);
+
+export { PlayerAvatarName, PlayerBadge, PlayerName };

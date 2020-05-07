@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Descriptions, Modal, Input, InputNumber } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { PlayerAvatarName, PlayerBadge, PlayerName } from './components';
 
 const InlineContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 4px;
 `;
 
 const PlayerPointsContainer = styled.div`
@@ -23,6 +24,7 @@ const PlayerNameContainer = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding: 4px 0;
 `;
 
 const PlayerAnswer = ({ player, answer, updatePoints }) => {
@@ -36,7 +38,12 @@ const PlayerAnswer = ({ player, answer, updatePoints }) => {
 
   return (
     <InlineContainer>
-      <PlayerNameContainer>{player.player_name}</PlayerNameContainer>
+      <PlayerNameContainer>
+       <PlayerAvatarName>
+          <PlayerBadge player={player} />
+          <PlayerName>{player.player_name}</PlayerName>
+        </PlayerAvatarName>
+      </PlayerNameContainer>
       <PlayerAnswerContainer>
         <Input.TextArea
           disabled={true}

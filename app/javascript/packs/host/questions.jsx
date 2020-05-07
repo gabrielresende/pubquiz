@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Button, Modal, Table, Form, Input, InputNumber } from 'antd';
-import { SendOutlined } from '@ant-design/icons';
+import { EditOutlined, MinusCircleOutlined, PlusOutlined, SendOutlined } from '@ant-design/icons';
 import Answers from './answers';
 
 const QuestionsTitle = styled.div`
@@ -10,6 +10,23 @@ const QuestionsTitle = styled.div`
   align-items: center;
   margin-bottom: 20px;
 `;
+
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 4 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 20 },
+  },
+};
+const formItemLayoutWithOutLabel = {
+  wrapperCol: {
+    xs: { span: 24, offset: 0 },
+    sm: { span: 20, offset: 4 },
+  },
+};
 
 const QuestionModal = ({
   createQuestion,
@@ -40,21 +57,70 @@ const QuestionModal = ({
         form={form}
         initialValues={initialQuestion}
       >
-        <Form.Item name={'title'} label="Title" rules={[{ required: true }]}>
+        <Form.Item name="title" label="Title" rules={[{ required: true }]}>
           <Input.TextArea />
         </Form.Item>
-        <Form.Item name={'image_url'} label="Image URL" rules={[{ type: 'url' }]}>
+        <Form.Item name="image_url" label="Image URL" rules={[{ type: 'url' }]}>
           <Input />
         </Form.Item>
-        <Form.Item name={'points'} label="Points" rules={[{ required: true, type: 'number', min: 0 }]}>
+        <Form.Item name="points" label="Points" rules={[{ required: true, type: 'number', min: 0 }]}>
           <InputNumber />
         </Form.Item>
-        <Form.Item name={'time'} label="Time (sec)" rules={[{ required: true, type: 'number', min: 5, max: 300 }]}>
+        <Form.Item name="time" label="Time (sec)" rules={[{ required: true, type: 'number', min: 5, max: 300 }]}>
           <InputNumber />
         </Form.Item>
-        <Form.Item name={'answer'} label="Answer" rules={[{ required: true }]}>
+        <Form.Item name="answer" label="Answer" rules={[{ required: true }]}>
           <Input />
         </Form.Item>
+        <Form.List name="options">
+          {(fields, { add, remove }) => {
+            return (
+              <div>
+                {fields.map((field, index) => (
+                  <Form.Item
+                    {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
+                    label={index === 0 ? 'Options' : ''}
+                    required={false}
+                    key={field.key}
+                  >
+                    <Form.Item
+                      {...field}
+                      validateTrigger={['onChange', 'onBlur']}
+                      rules={[
+                        {
+                          required: true,
+                          whitespace: true,
+                          message: "Please enter option or delete this field.",
+                        },
+                      ]}
+                      noStyle
+                    >
+                      <Input placeholder="Option" style={{ width: '60%' }} />
+                    </Form.Item>
+                    <MinusCircleOutlined
+                      className="dynamic-delete-button"
+                      style={{ margin: '0 8px' }}
+                      onClick={() => {
+                        remove(field.name);
+                      }}
+                    />
+                  </Form.Item>
+                ))}
+                <Form.Item>
+                  <Button
+                    type="dashed"
+                    onClick={() => {
+                      add();
+                    }}
+                    style={{ width: '60%' }}
+                  >
+                    <PlusOutlined /> Add option
+                  </Button>
+                </Form.Item>
+              </div>
+            );
+          }}
+        </Form.List>
       </Form>
     </Modal>
   );
@@ -97,26 +163,33 @@ const Questions = ({
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
+      ellipsis: true,
+      width: "60%",
     },
     {
       title: 'Answer',
       dataIndex: 'answer',
       key: 'answer',
+      ellipsis: true,
+      width: "40%",
     },
     {
-      title: 'Points',
+      title: 'Pts',
       dataIndex: 'points',
       key: 'points',
+      width: 60,
     },
     {
-      title: 'Time (s)',
+      title: 't (s)',
       dataIndex: 'time',
       key: 'time',
+      width: 60,
     },
     {
       title: 'Sent',
       dataIndex: 'sent',
       key: 'sent',
+      width: 60,
       render: (_, record) => (
         <div>{record.sent_at ? "Yes" : "No"}</div>
       ),
@@ -124,16 +197,22 @@ const Questions = ({
     {
       title: 'Actions',
       dataIndex: 'actions',
+      width: 120,
       render: (_, record) => (
         <div>
           <Button
+            type="dashed"
+            shape="circle"
+            icon={<EditOutlined />}
+            onClick={() => handleSendQuestion(record)}
+          />
+          <span style={{ display: 'inline-block', width: '10px' }}></span>
+          <Button
             type="primary"
-            shape="round"
+            shape="circle"
             icon={<SendOutlined />}
             onClick={() => handleSendQuestion(record)}
-          >
-            Send
-          </Button>
+          />
         </div>
       ),
     }
