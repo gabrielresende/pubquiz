@@ -55,7 +55,7 @@ const Host = ({
         return [action.payload, ...state.filter(item => item.player_id !== action.payload.player_id)];
       case 'remove':
         newPlayers = [...state.filter(item => item.player_id !== action.playerId)];
-        cableApp.quiz.perform("remove_player", { player_id: playerId });
+        cableApp.quiz.perform("remove_player", { player_id: action.playerId });
         return newPlayers;
       case 'reset':
         return action.payload;

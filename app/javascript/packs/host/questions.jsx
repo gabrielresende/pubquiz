@@ -43,6 +43,9 @@ const QuestionModal = ({
         <Form.Item name={'title'} label="Title" rules={[{ required: true }]}>
           <Input.TextArea />
         </Form.Item>
+        <Form.Item name={'image_url'} label="Image URL" rules={[{ type: 'url' }]}>
+          <Input />
+        </Form.Item>
         <Form.Item name={'points'} label="Points" rules={[{ required: true, type: 'number', min: 0 }]}>
           <InputNumber />
         </Form.Item>

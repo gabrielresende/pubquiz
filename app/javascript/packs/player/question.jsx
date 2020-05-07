@@ -3,6 +3,10 @@ import styled from 'styled-components';
 import { InlineForm, Input, VerticalRadio } from './components';
 
 const Container = styled.div`
+  @media (min-width: 620px) {
+    min-width: 600px;
+  }
+  max-width: 800px;
   background-color: white;
   border: 1px solid #eee;
   border-radius: 4px;
@@ -34,9 +38,20 @@ const OpenAnswerForm = ({ handleAnswer }) => (
     <Input
       type="text"
       onChange={e => handleAnswer(e.target.value)}
-      placeholder="Type your answer here"
+      placeholder="Digite sua resposta aqui"
     />
   </InlineForm>
+);
+
+const ImageContainer = styled.div`
+  width: 80%;
+  margin: 20px auto;
+`;
+
+const QuestionImage = ({ url }) => (
+  <ImageContainer>
+    <img src={url} style={{ width: '100%' }} />
+  </ImageContainer>
 );
 
 const Question = ({ question, handleAnswer }) => {
@@ -74,6 +89,10 @@ const Question = ({ question, handleAnswer }) => {
       </QuestionInfo>
       <Divider />
       <QuestionLabel>{question.title}</QuestionLabel>
+      {(question && question.image_url)
+        ? <QuestionImage url={question.image_url} />
+        : null
+      }
       {question.options
         ? <VerticalRadio options={question.options} handleAnswer={handleAnswer} />
         : <OpenAnswerForm handleAnswer={handleAnswer} />

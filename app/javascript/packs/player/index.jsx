@@ -84,8 +84,8 @@ const Game = ({ cableApp, initialPlayerName, quizId, quizName }) => {
           ? <Question question={question} handleAnswer={handleAnswer} />
           : (
             <div>
-              <div>Hello {playerName}!</div>
-              <div>Waiting for the next question...</div>
+              <div>Olá, {playerName}!</div>
+              <div>Aguardando a próxima questão...</div>
             </div>  
           )
         )

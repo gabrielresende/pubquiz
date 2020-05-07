@@ -4,7 +4,7 @@ class QuizPlayer < ApplicationRecord
 
   enum status: [:offline, :online, :away]
 
-  after_commit :notify_player_update
+  after_commit :notify_player_update, on: [:create, :update]
 
   def player_name
     player.name || 'Guest'
