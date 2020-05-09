@@ -39,9 +39,19 @@ const Host = ({
         cableApp.quiz.perform("update_questions", { questions: newQuestions });
         return newQuestions;
       case 'edit':
-        newQuestions = [...state.filter(question => question.id !== action.question.id), action.question];
+        newQuestions = state.map(question => {
+          if (question.id !== action.question.id) {
+            return question;
+          } else {
+            return action.question;
+          }
+        });
         cableApp.quiz.perform("update_questions", { questions: newQuestions });
         return newQuestions;
+      case 'delete':
+          newQuestions = [...state.filter(question => question.id !== action.question.id)];
+          cableApp.quiz.perform("update_questions", { questions: newQuestions });
+          return newQuestions;
       case 'reset':
         return [action.payload];
       default:

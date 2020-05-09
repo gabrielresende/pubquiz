@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Button, Form, Input, InputNumber, Modal, Table, Tooltip } from 'antd';
-import { EditOutlined, MinusCircleOutlined, PlusOutlined, SendOutlined } from '@ant-design/icons';
+import { Button, Modal, Table, Tooltip } from 'antd';
+import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, SendOutlined } from '@ant-design/icons';
 import Answers from './answers';
+import QuestionModal from './questionModal';
 
 const QuestionsTitle = styled.div`
   display: flex;
@@ -10,121 +11,6 @@ const QuestionsTitle = styled.div`
   align-items: center;
   margin-bottom: 20px;
 `;
-
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 4 },
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 20 },
-  },
-};
-const formItemLayoutWithOutLabel = {
-  wrapperCol: {
-    xs: { span: 24, offset: 0 },
-    sm: { span: 20, offset: 4 },
-  },
-};
-
-const QuestionModal = ({
-  createQuestion,
-  initialQuestion,
-  handleCancel,
-  visible,
-}) => {
-  const [form] = Form.useForm();
-  
-  function handleSubmit() {
-    form.validateFields()
-      .then(values => createQuestion(values))
-      .catch(() => console.log('Something went wrong'));
-  }
-
-  return (
-    <Modal
-      title='New question'
-      visible={visible}
-      okText='Create'
-      onOk={handleSubmit}
-      onCancel={handleCancel}
-    >
-      <Form
-        layout="horizontal"
-        labelCol={{ span: 6 }}
-        wrapperCol={{ span: 18 }}
-        form={form}
-        initialValues={initialQuestion}
-      >
-        <Form.Item name="title" label="Title" rules={[{ required: true }]}>
-          <Input.TextArea />
-        </Form.Item>
-        <Form.Item name="image_url" label="Image URL" rules={[{ type: 'url' }]}>
-          <Input />
-        </Form.Item>
-        <Form.Item name="points" label="Points" rules={[{ required: true, type: 'number', min: 0 }]}>
-          <InputNumber />
-        </Form.Item>
-        <Form.Item name="time" label="Time (sec)" rules={[{ required: true, type: 'number', min: 5, max: 300 }]}>
-          <InputNumber />
-        </Form.Item>
-        <Form.Item name="answer" label="Answer" rules={[{ required: true }]}>
-          <Input />
-        </Form.Item>
-        <Form.List name="options">
-          {(fields, { add, remove }) => {
-            return (
-              <div>
-                {fields.map((field, index) => (
-                  <Form.Item
-                    {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                    label={index === 0 ? 'Options' : ''}
-                    required={false}
-                    key={field.key}
-                  >
-                    <Form.Item
-                      {...field}
-                      validateTrigger={['onChange', 'onBlur']}
-                      rules={[
-                        {
-                          required: true,
-                          whitespace: true,
-                          message: "Please enter option or delete this field.",
-                        },
-                      ]}
-                      noStyle
-                    >
-                      <Input placeholder="Option" style={{ width: '60%' }} />
-                    </Form.Item>
-                    <MinusCircleOutlined
-                      className="dynamic-delete-button"
-                      style={{ margin: '0 8px' }}
-                      onClick={() => {
-                        remove(field.name);
-                      }}
-                    />
-                  </Form.Item>
-                ))}
-                <Form.Item>
-                  <Button
-                    type="dashed"
-                    onClick={() => {
-                      add();
-                    }}
-                    style={{ width: '60%' }}
-                  >
-                    <PlusOutlined /> Add option
-                  </Button>
-                </Form.Item>
-              </div>
-            );
-          }}
-        </Form.List>
-      </Form>
-    </Modal>
-  );
-}
 
 const Questions = ({
   updateQuestions,
@@ -136,13 +22,32 @@ const Questions = ({
   registerAnswers,
 }) => {
   const [customQuestion, setCustomQuestion] = useState(undefined);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [questionModalVisible, setQuestionModalVisible] = useState(false);
   const [answersModalVisible, setAnswersModalVisible] = useState(false);
   const [question, setQuestion] = useState(undefined)
 
-  function handleCreateQuestion(question) {
-    updateQuestions({type: 'add', question});
-    setModalVisible(false);
+  function handleEditQuestion(questionData) {
+    console.log('questionData', questionData);
+    setQuestion(questionData);
+    setQuestionModalVisible(true);
+  }
+
+  function handleDeleteQuestion(questionData) {
+    Modal.confirm({
+      title: 'Delete question?',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Delete questions? This cannot be undone',
+      onOk() {
+        updateQuestions({ type: 'delete', question: questionData });
+      },
+    });
+  }
+  
+  function handleSubmitQuestion(questionData) {
+    const type = questionData.id ? 'edit' : 'add';
+    updateQuestions({ type, question: questionData });
+    setQuestionModalVisible(false);
+    setQuestion(null);
   }
 
   function handleSendQuestion(question) {
@@ -197,7 +102,7 @@ const Questions = ({
     {
       title: 'Actions',
       dataIndex: 'actions',
-      width: 120,
+      width: 140,
       render: (_, record) => (
         <div>
           <Tooltip title="Edit">
@@ -205,10 +110,20 @@ const Questions = ({
               type="dashed"
               shape="circle"
               icon={<EditOutlined />}
-              onClick={() => handleSendQuestion(record)}
+              onClick={() => handleEditQuestion(record)}
             />
           </Tooltip>
-          <span style={{ display: 'inline-block', width: '10px' }}></span>
+          <span style={{ display: 'inline-block', width: '5px' }}></span>
+          <Tooltip title="Delete">
+            <Button
+              type="primary"
+              shape="circle"
+              icon={<DeleteOutlined />}
+              onClick={() => handleDeleteQuestion(record)}
+              danger
+            />
+          </Tooltip>
+          <span style={{ display: 'inline-block', width: '5px' }}></span>
           <Tooltip title="Send question">
             <Button
               type="primary"
@@ -228,7 +143,7 @@ const Questions = ({
         <h3>Questions</h3>
         <div>
           <Button
-            onClick={() => setModalVisible(true)}
+            onClick={() => setQuestionModalVisible(true)}
           >
             New question
           </Button>
@@ -251,9 +166,13 @@ const Questions = ({
         </button>
       </div>
       <QuestionModal
-        visible={modalVisible}
-        handleCancel={() => setModalVisible(false)}
-        createQuestion={handleCreateQuestion}
+        visible={questionModalVisible}
+        cancel={() => {
+          setQuestion(null);
+          setQuestionModalVisible(false);
+        }}
+        initialQuestion={question}
+        submit={handleSubmitQuestion}
       />
       {answersModalVisible
         ? (
