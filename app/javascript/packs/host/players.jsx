@@ -69,7 +69,9 @@ const Players = ({ players, removePlayer, score }) => {
     <Container>
       <h3>Players</h3>
       {(Array.isArray(players) && players.length)
-        ? players.sort((a,b) => a.player_name.localeCompare(b.player_name)).map(player => (
+        ? players.sort((a,b) => a.player_name.localeCompare(b.player_name))
+          .sort((a,b) => scoreFor(b.player_id) - scoreFor(a.player_id))
+          .map(player => (
             <Player
               key={player.player_id}
               player={player}
