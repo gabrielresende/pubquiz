@@ -4,6 +4,7 @@ import { Col, Row } from 'antd';
 import Questions from './questions';
 import Players from './players';
 
+import { OpenQuizButton, ShareLinkButton } from './components/quizOperations';
 import { PageHeader } from 'antd';
 
 const PageContainer = styled.div`
@@ -34,16 +35,17 @@ const QuizDetails = styled.div`
 `;
 
 const PageLayout = ({
-  roundAnswers,
-  quizName,
+  closeQuestion,
   players,
-  score,
-  removePlayer,
+  playUrl,
   questions,
+  quizName,
   registerAnswers,
+  removePlayer,
+  roundAnswers,
+  score,
   sendQuestion,
   updateQuestions,
-  closeQuestion,
 }) => {
   return (
     <PageContainer>
@@ -51,8 +53,12 @@ const PageLayout = ({
       <QuizContainer>
         <PageHeader
           ghost={false}
-          onBack={() => window.history.back()}
+          onBack={() => {window.location.href = '/'}}
           title={quizName}
+          extra={[
+            <OpenQuizButton key="openQuiz" link={playUrl} />,
+            <ShareLinkButton key="shareLink" link={playUrl} />
+          ]}
         />
         <QuizDetails>
           <Row gutter={16}>

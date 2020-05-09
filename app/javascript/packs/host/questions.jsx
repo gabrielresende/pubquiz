@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Button, Modal, Table, Form, Input, InputNumber } from 'antd';
+import { Button, Form, Input, InputNumber, Modal, Table, Tooltip } from 'antd';
 import { EditOutlined, MinusCircleOutlined, PlusOutlined, SendOutlined } from '@ant-design/icons';
 import Answers from './answers';
 
@@ -189,7 +189,7 @@ const Questions = ({
       title: 'Sent',
       dataIndex: 'sent',
       key: 'sent',
-      width: 60,
+      width: 80,
       render: (_, record) => (
         <div>{record.sent_at ? "Yes" : "No"}</div>
       ),
@@ -200,19 +200,23 @@ const Questions = ({
       width: 120,
       render: (_, record) => (
         <div>
-          <Button
-            type="dashed"
-            shape="circle"
-            icon={<EditOutlined />}
-            onClick={() => handleSendQuestion(record)}
-          />
+          <Tooltip title="Edit">
+            <Button
+              type="dashed"
+              shape="circle"
+              icon={<EditOutlined />}
+              onClick={() => handleSendQuestion(record)}
+            />
+          </Tooltip>
           <span style={{ display: 'inline-block', width: '10px' }}></span>
-          <Button
-            type="primary"
-            shape="circle"
-            icon={<SendOutlined />}
-            onClick={() => handleSendQuestion(record)}
-          />
+          <Tooltip title="Send question">
+            <Button
+              type="primary"
+              shape="circle"
+              icon={<SendOutlined />}
+              onClick={() => handleSendQuestion(record)}
+            />
+          </Tooltip>
         </div>
       ),
     }
@@ -226,7 +230,7 @@ const Questions = ({
           <Button
             onClick={() => setModalVisible(true)}
           >
-            Add question
+            New question
           </Button>
         </div>
       </QuestionsTitle>

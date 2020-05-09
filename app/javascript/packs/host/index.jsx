@@ -18,6 +18,7 @@ function createUUID(){
 
 const Host = ({
   cableApp,
+  playUrl,
   quizAnswers,
   quizId,
   quizName,
@@ -63,12 +64,6 @@ const Host = ({
         throw new Error();
     }
   }
-
-  useEffect(() => {
-    console.log('quizAnswers', quizAnswers);
-    console.log('quizPlayers', quizPlayers);
-    console.log('quizQuestions', quizQuestions);
-  }, []);
 
   useEffect(() => {
     cableApp.quiz = cableApp.cable.subscriptions.create(
@@ -136,22 +131,24 @@ const Host = ({
 
   return (
     <Layout
-      quizName={quizName}
-      players={players}
-      score={score}
-      removePlayer={removePlayer}
-      questions={questions}
-      sendQuestion={sendQuestion}
-      roundAnswers={roundAnswers}
-      updateQuestions={updateQuestions}
       closeQuestion={closeQuestion}
+      players={players}
+      playUrl={playUrl}
+      questions={questions}
+      quizName={quizName}
       registerAnswers={registerAnswers}
+      removePlayer={removePlayer}
+      roundAnswers={roundAnswers}
+      score={score}
+      sendQuestion={sendQuestion}
+      updateQuestions={updateQuestions}
     />
   );
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   const node = document.getElementById('gameinfo');
+  const playUrl = node.getAttribute('play_url');
   const quizAnswers = JSON.parse(node.getAttribute('quiz_answers'));
   const quizId = node.getAttribute('quiz_id');
   const quizName = node.getAttribute('quiz_name');
@@ -163,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
     <Host
       cableApp={CableApp}
+      playUrl={playUrl}
       quizAnswers={quizAnswers}
       quizId={quizId}
       quizName={quizName}

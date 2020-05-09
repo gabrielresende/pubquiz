@@ -26,7 +26,7 @@ const PlayerBadge = ({ player }) => (
       size="small"
       style={{ backgroundColor: {online: '#a0d911', away: '#fadb14', offline: '#f5222d'}[player.status] }}
       icon={<UserOutlined />}
-      />
+    />
   </Badge>
 );
 

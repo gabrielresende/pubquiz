@@ -7,5 +7,6 @@
   quiz_answers="<%= @quiz.answers.to_json %>"
   quiz_questions="<%= @quiz.questions.to_json %>"
   quiz_players="<%= @quiz.quiz_players.includes(:player).to_json(only: [:id, :player_id, :status], methods: [:player_name]) %>"
+  play_url="<%= play_quiz_url(@quiz) %>"
 ></div>
 <%= javascript_pack_tag 'host/index' %>

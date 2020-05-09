@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Button, Modal, Tooltip } from 'antd';
+import { Button, Empty, Modal, Tooltip } from 'antd';
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { PlayerAvatarName, PlayerBadge, PlayerName } from './components';
 
@@ -68,14 +68,17 @@ const Players = ({ players, removePlayer, score }) => {
   return (
     <Container>
       <h3>Players</h3>
-      {players.sort((a,b) => a.player_name.localeCompare(b.player_name)).map(player => (
-        <Player
-          key={player.player_id}
-          player={player}
-          score={scoreFor(player.player_id)}
-          removePlayer={removePlayer}
-        />
-      ))}
+      {(Array.isArray(players) && players.length)
+        ? players.sort((a,b) => a.player_name.localeCompare(b.player_name)).map(player => (
+            <Player
+              key={player.player_id}
+              player={player}
+              score={scoreFor(player.player_id)}
+              removePlayer={removePlayer}
+            />
+          ))
+        : <Empty description="No players yet" />
+      }
     </Container>
   );
 };
