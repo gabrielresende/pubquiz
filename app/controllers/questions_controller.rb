@@ -1,4 +1,6 @@
 class QuestionsController < ApplicationController
+  include AdminRestricted
+  
   before_action :set_question, only: [:show, :edit, :update, :destroy]
 
   # GET /questions
