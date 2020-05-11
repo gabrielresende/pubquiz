@@ -24,11 +24,11 @@ const Game = ({ cableApp, initialPlayerName, quizId, quizName }) => {
   const [playerName, setPlayerName] = useState(initialPlayerName);
   const [question, setQuestion] = useState(undefined);
   const [status, setStatus] = useState(documentIsActive() ? 'online' : 'away');
-  
+
   useEffect(() => {
     cableApp.quiz = cableApp.cable.subscriptions.create(
       { channel: "QuizChannel", id: quizId },
-      { 
+      {
         connected: () => install(),
         disconnected: () => uninstall(),
         received: data => handleDataReceived(data),
@@ -83,6 +83,11 @@ const Game = ({ cableApp, initialPlayerName, quizId, quizName }) => {
     cableApp.quiz.perform("send_answer", { answer });
   }
 
+  function handlePlayerNameChange(name) {
+    cableApp.quiz.perform("update_player_name", { name });
+    setPlayerName(name);
+  }
+
   return (
     <Wrapper>
       {playerName
@@ -92,11 +97,11 @@ const Game = ({ cableApp, initialPlayerName, quizId, quizName }) => {
             <div>
               <div>Olá, {playerName}!</div>
               <div>Aguardando a próxima questão...</div>
-            </div>  
+            </div>
           )
         )
         : (
-          <User quizName={quizName} setPlayerName={setPlayerName} />
+          <User quizName={quizName} setPlayerName={handlePlayerNameChange} />
         )
       }
     </Wrapper>
@@ -110,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const playerName = node.getAttribute('player_name')
   const reactRoot = document.body.appendChild(document.createElement('div'))
   reactRoot.setAttribute("id", "root")
-  
+
   ReactDOM.render(
     <Game
       cableApp={CableApp}

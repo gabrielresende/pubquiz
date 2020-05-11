@@ -16,21 +16,13 @@ const Title = styled.span`
 
 const User = ({ quizName, setPlayerName }) => {
   const [name, setName] = useState(undefined);
-  
+
   function onKeyDownHandler(e) {
     if (e.keyCode === 13) {
-      submitName();
+      setPlayerName(name);
     }
   }
 
-  function submitName() {
-    fetch('/me.json', {
-      method: 'PATCH',
-      body: JSON.stringify({ name }),
-      headers: { 'Content-Type': 'application/json' },
-    }).then(res => setPlayerName(name)).catch(err => err);
-  }
-  
   return (
     <Container>
       <Title>Bem-vindo ao {quizName}</Title>
@@ -45,7 +37,7 @@ const User = ({ quizName, setPlayerName }) => {
         <Button
           type="button"
           primary
-          onClick={() => submitName(name)}
+          onClick={() => setPlayerName(name)}
         >
           Entrar
         </Button>

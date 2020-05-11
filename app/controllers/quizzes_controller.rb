@@ -16,11 +16,6 @@ class QuizzesController < ApplicationController
     @player_name = current_user.name
   end
 
-  # GET /quizzes/1/players
-  def players
-    @quiz_players = @quiz.quiz_players
-  end
-  
   # GET /quizzes/1
   # GET /quizzes/1.json
   def show

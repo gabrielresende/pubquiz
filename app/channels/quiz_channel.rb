@@ -1,7 +1,7 @@
 class QuizChannel < ApplicationCable::Channel
   def subscribed
     stream_from "questions_for_quiz_#{quiz.id}"
-    
+
     if quiz.owner == current_user
       stream_from "player_update_for_quiz_#{quiz.id}"
       stream_from "answers_for_quiz_#{quiz.id}"
@@ -30,6 +30,10 @@ class QuizChannel < ApplicationCable::Channel
     if quiz.owner == current_user
       QuizPlayer.find_by(quiz: quiz, player_id: data['player_id'])&.destroy
     end
+  end
+
+  def update_player_name(data)
+    current_user.update(name: data['name'])
   end
 
   def update_questions(data)
