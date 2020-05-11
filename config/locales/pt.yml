@@ -1,0 +1,9 @@
+pt:
+  hello: "Olá mundo"
+  home:
+    create_and_have_fun: "Promova um Pub Quiz online e divirta-se com seus amigos."
+    my_quizzes: "Meus quizzes"
+    delete: "Deletar"
+    are_you_sure: "Tem certeza?"
+    new_quiz: "Novo quiz"
+    create: "Criar"

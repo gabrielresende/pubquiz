@@ -12,11 +12,11 @@
   <% end %>
 
   <div class="field">
-    <%= form.label :name %>
+    <%= form.label I18n.t('home.new_quiz') %>
     <%= form.text_field :name %>
   </div>
 
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit I18n.t('home.create') %>
   </div>
 <% end %>

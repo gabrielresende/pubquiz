@@ -1,12 +1,12 @@
 <h1>Pub Quiz</h1>
-<p>Create a pub quiz and have fun with your friends.</p>
+<p><%= t 'home.create_and_have_fun' %></p>
 
 
 <% if @owned_quizzes.any? %>
-  <h3>My Quizzes</h3>
+  <h3><%= t 'home.my_quizzes' %></h3>
   <ul>
     <% @owned_quizzes.each do |quiz| %>
-      <li><%= link_to quiz.name, quiz %> (<%= link_to 'Delete', quiz, method: :delete, data: { confirm: 'Are you sure?' } %>)</li>
+      <li><%= link_to quiz.name, quiz %> (<%= link_to I18n.t('home.delete'), quiz, method: :delete, data: { confirm: I18n.t('home.are_you_sure') } %>)</li>
     <% end %>
   </ul>
 <% end %>
