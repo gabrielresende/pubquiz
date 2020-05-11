@@ -7,8 +7,8 @@ Rails.application.routes.draw do
   resources :quizzes do
     get 'play', on: :member
   end
-  
-  scope '/admin' do
+
+  namespace :admin do
     resources :questions
     resources :categories
     resources :users
