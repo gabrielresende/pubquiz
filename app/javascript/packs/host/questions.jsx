@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Modal, Table, Tooltip } from 'antd';
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, SendOutlined } from '@ant-design/icons';
 import Answers from './answers';
@@ -16,6 +16,7 @@ const QuestionsTitle = styled.div`
 const Questions = ({
   updateQuestions,
   closeQuestion,
+  intl,
   questions,
   players,
   sendQuestion,
@@ -33,9 +34,9 @@ const Questions = ({
 
   function handleDeleteQuestion(questionData) {
     Modal.confirm({
-      title: <FormattedMessage id="quiz.questions.confirmDeleteQuestionTitle" />,
+      title: intl.formatMessage({ id: 'quiz.questions.confirmDeleteQuestionTitle' }),
       icon: <ExclamationCircleOutlined />,
-      content: <FormattedMessage id="quiz.questions.confirmDeleteQuestionMessage" />,
+      content: intl.formatMessage({ id: 'quiz.questions.confirmDeleteQuestionMessage' }),
       onOk() {
         updateQuestions({ type: 'delete', question: questionData });
       },
@@ -180,4 +181,4 @@ const Questions = ({
   );
 };
 
-export default Questions;
+export default injectIntl(Questions);

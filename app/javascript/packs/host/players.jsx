@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Empty, Modal, Tooltip } from 'antd';
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { PlayerAvatarName, PlayerBadge, PlayerName } from './components';
@@ -33,7 +33,7 @@ const PlayerActions = styled.div`
   margin-right: 10px;
 `;
 
-const Player = ({ player, removePlayer, score }) => (
+const PlayerComponent = ({ intl, player, removePlayer, score }) => (
   <PlayerContainer>
     <PlayerAvatarName>
       <PlayerBadge player={player} />
@@ -48,9 +48,9 @@ const Player = ({ player, removePlayer, score }) => (
           size="small"
           icon={<DeleteOutlined />}
           onClick={() => confirm({
-            title: <FormattedMessage id="quiz.players.remove.modalTitle" />,
+            title: intl.formatMessage({ id: 'quiz.players.remove.modalTitle' }),
             icon: <ExclamationCircleOutlined />,
-            content: <FormattedMessage id="quiz.players.remove.modalMessage" />,
+            content: intl.formatMessage({ id: 'quiz.players.remove.modalMessage' }),
             onOk() { removePlayer(player.player_id) },
             onCancel() {},
           })}
@@ -59,6 +59,8 @@ const Player = ({ player, removePlayer, score }) => (
     </PlayerActions>
   </PlayerContainer>
 );
+
+const Player = injectIntl(PlayerComponent);
 
 const Players = ({ players, removePlayer, score }) => {
   function scoreFor(playerId) {

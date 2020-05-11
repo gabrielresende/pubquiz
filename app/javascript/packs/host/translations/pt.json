@@ -37,7 +37,7 @@
   "quiz.questions.form.option": "Alternativa",
   "quiz.questions.form.addOption": "Adicionar alternativas",
   "quiz.questions.confirmDeleteQuestionTitle": "Apagar questão?",
-  "quiz.questions.confirmDeleteQuestionMessage": "Apagar questão? Não há como desfazer",
+  "quiz.questions.confirmDeleteQuestionMessage": "Tem certeza que deseja apagar questão? Essa operação não pode ser desfeita.",
   "quiz.questions.table.title": "Enunciado",
   "quiz.questions.table.answer": "Resposta",
   "quiz.questions.table.points": "Pts",
