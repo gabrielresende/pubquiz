@@ -70,9 +70,9 @@ const Answers = ({
   visible,
   registerAnswers,
 }) => {
-  const [points, setPoints] = useState({});
   const duration = (question.time || 60) * 1000
-  const expiration = Date.now() + duration;
+  const [points, setPoints] = useState({});
+  const [expiration, setExpiration] = useState(Date.now() + duration);
   const [timeLeft, setTimeLeft] = useState(formatTime(expiration - Date.now()));
 
   useEffect(() => {
@@ -113,7 +113,7 @@ const Answers = ({
   }
 
   function handleRegisterRound() {
-    if (Date.now() > expiration) {
+    if (expiration <= Date.now()) {
       registerRound();
       return;
     }

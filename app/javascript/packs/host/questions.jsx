@@ -27,6 +27,11 @@ const Questions = ({
   const [answersModalVisible, setAnswersModalVisible] = useState(false);
   const [question, setQuestion] = useState(undefined)
 
+  function handleNewQuestion() {
+    setQuestion({});
+    setQuestionModalVisible(true);
+  }
+
   function handleEditQuestion(questionData) {
     setQuestion(questionData);
     setQuestionModalVisible(true);
@@ -142,9 +147,7 @@ const Questions = ({
       <QuestionsTitle>
         <h3>{<FormattedMessage id="quiz.questions.title" />}</h3>
         <div>
-          <Button
-            onClick={() => setQuestionModalVisible(true)}
-          >
+          <Button onClick={handleNewQuestion}>
             {<FormattedMessage id="quiz.questions.newQuestion" />}
           </Button>
         </div>

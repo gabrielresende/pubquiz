@@ -30,7 +30,6 @@ const QuestionModal = ({
   const [form] = Form.useForm();
 
   useEffect(() => {
-    // TODO: Fix this gambiarra
     if (initialQuestion) {
       form.resetFields();
     }
@@ -44,16 +43,15 @@ const QuestionModal = ({
 
   return (
     <Modal
-      title={initialQuestion
+      title={initialQuestion && initialQuestion.id
         ? <FormattedMessage id="quiz.questions.editQuestionTitle" />
         : <FormattedMessage id="quiz.questions.newQuestionTitle" />}
       visible={visible}
-      okText={initialQuestion
+      okText={initialQuestion && initialQuestion.id
         ? <FormattedMessage id="quiz.questions.edit" />
         : <FormattedMessage id="quiz.questions.create" />}
       onOk={handleSubmit}
       onCancel={cancel}
-      destroyOnClose
     >
       <Form
         layout="horizontal"
