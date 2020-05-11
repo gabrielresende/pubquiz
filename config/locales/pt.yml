@@ -6,4 +6,5 @@ pt:
     delete: "Deletar"
     are_you_sure: "Tem certeza?"
     new_quiz: "Novo quiz"
+    quiz_name: "Nome do quiz"
     create: "Criar"

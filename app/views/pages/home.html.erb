@@ -1,7 +1,6 @@
 <h1>Pub Quiz</h1>
 <p><%= t 'home.create_and_have_fun' %></p>
 
-
 <% if @owned_quizzes.any? %>
   <h3><%= t 'home.my_quizzes' %></h3>
   <ul>
@@ -11,4 +10,4 @@
   </ul>
 <% end %>
 
-<%= render 'quizzes/form', quiz: @quiz %>
+<%= render 'pages/form', quiz: @quiz %>

@@ -1,0 +1,9 @@
+<h3><%= t('home.new_quiz') %></h3>
+<div class="home-form">
+  <%= form_with(model: quiz, local: true) do |form| %>
+    <div class="inline-form">
+      <%= form.text_field :name, placeholder: I18n.t('home.quiz_name'), class: 'home-input' %>
+      <%= form.submit I18n.t('home.create'), class: 'home-button' %>
+    </div>
+  <% end %>
+</div>

@@ -6,4 +6,5 @@ en:
     delete: "Delete"
     are_you_sure: "Are you sure?"
     new_quiz: "New quiz"
+    quiz_name: "Quiz name"
     create: "Create"
