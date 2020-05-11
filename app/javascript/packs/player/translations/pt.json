@@ -1,0 +1,5 @@
+{
+  "quiz.player.helloPlayer": "Olá {player}!",
+  "quiz.player.awaitingNextQuestion": "Aguardando a próxima questão...",
+  "nothing": "."
+}

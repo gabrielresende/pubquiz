@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import styled from 'styled-components'
 import User from './user';
 import Question from './question';
+import TranslationRoot from './translations';
+import { FormattedMessage } from 'react-intl';
 import { createConsumer } from "@rails/actioncable"
 
 const CableApp = {};
@@ -95,8 +97,8 @@ const Game = ({ cableApp, initialPlayerName, quizId, quizName }) => {
           ? <Question question={question} handleAnswer={handleAnswer} />
           : (
             <div>
-              <div>Olá, {playerName}!</div>
-              <div>Aguardando a próxima questão...</div>
+              <div><FormattedMessage id="quiz.player.helloPlayer" values={{ player: playerName }} /></div>
+              <div><FormattedMessage id="quiz.player.awaitingNextQuestion" /></div>
             </div>
           )
         )
@@ -117,12 +119,14 @@ document.addEventListener('DOMContentLoaded', () => {
   reactRoot.setAttribute("id", "root")
 
   ReactDOM.render(
-    <Game
-      cableApp={CableApp}
-      quizId={quizId}
-      quizName={quizName}
-      initialPlayerName={playerName}
-    />,
+    <TranslationRoot>
+      <Game
+        cableApp={CableApp}
+        quizId={quizId}
+        quizName={quizName}
+        initialPlayerName={playerName}
+      />
+    </TranslationRoot>,
     reactRoot,
   )
 })
