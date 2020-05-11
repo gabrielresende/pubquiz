@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { FormattedMessage } from 'react-intl';
 import { Button, Empty, Modal, Tooltip } from 'antd';
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { PlayerAvatarName, PlayerBadge, PlayerName } from './components';
@@ -40,16 +41,16 @@ const Player = ({ player, removePlayer, score }) => (
       <PlayerScore>{score}</PlayerScore>
     </PlayerAvatarName>
     <PlayerActions>
-      <Tooltip title="Remove">
+      <Tooltip title={<FormattedMessage id="quiz.players.remove" />}>
         <Button
           type="link"
           shape="circle"
           size="small"
           icon={<DeleteOutlined />}
           onClick={() => confirm({
-            title: 'Remove player?',
+            title: <FormattedMessage id="quiz.players.remove.modalTitle" />,
             icon: <ExclamationCircleOutlined />,
-            content: 'Are you sure you want to remove this player?',
+            content: <FormattedMessage id="quiz.players.remove.modalMessage" />,
             onOk() { removePlayer(player.player_id) },
             onCancel() {},
           })}
@@ -67,7 +68,7 @@ const Players = ({ players, removePlayer, score }) => {
 
   return (
     <Container>
-      <h3>Players</h3>
+      <h3><FormattedMessage id="quiz.players.title" /></h3>
       {(Array.isArray(players) && players.length)
         ? players.sort((a,b) => a.player_name.localeCompare(b.player_name))
           .sort((a,b) => scoreFor(b.player_id) - scoreFor(a.player_id))
@@ -79,7 +80,7 @@ const Players = ({ players, removePlayer, score }) => {
               removePlayer={removePlayer}
             />
           ))
-        : <Empty description="No players yet" />
+        : <Empty description={<FormattedMessage id="quiz.players.empty" />} />
       }
     </Container>
   );

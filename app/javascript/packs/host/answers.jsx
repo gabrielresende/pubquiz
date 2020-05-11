@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { Descriptions, Modal, Input, InputNumber } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { PlayerAvatarName, PlayerBadge, PlayerName } from './components';
@@ -62,6 +63,7 @@ const PlayerAnswer = ({ player, answer, updatePoints }) => {
 const Answers = ({
   closeQuestion,
   hideModal,
+  intl,
   players,
   question,
   roundAnswers,
@@ -117,9 +119,9 @@ const Answers = ({
     }
 
     Modal.confirm({
-      title: 'Submit questions?',
+      title: intl.formatMessage({ id: "quiz.game.answers.confirmSubmitAnswerTitle" }),
       icon: <ExclamationCircleOutlined />,
-      content: 'There is still time left to answer this question. Submit answers and close question?',
+      content: intl.formatMessage({ id: "quiz.game.answers.confirmSubmitAnswerMessage" }),
       onOk() {
         registerRound();
       },
@@ -134,9 +136,9 @@ const Answers = ({
 
   function handleCloseQuestion() {
     Modal.confirm({
-      title: 'Close question?',
+      title: intl.formatMessage({ id: "quiz.game.answers.confirmCloseQuestionTitle" }),
       icon: <ExclamationCircleOutlined />,
-      content: 'Close this question for all players and discard answers?',
+      content: intl.formatMessage({ id: "quiz.game.answers.confirmCloseQuestionMessage" }),
       onOk() {
         closeQuestion();
         hideModal();
@@ -146,10 +148,10 @@ const Answers = ({
 
   return (
     <Modal
-      title='Awaiting answers'
+      title={<FormattedMessage id="quiz.game.answers.modalTitle" />}
       visible={visible}
-      okText='Register answers'
-      cancelText='Close question'
+      okText={<FormattedMessage id="quiz.game.answers.modalRegisterAnswers" />}
+      cancelText={<FormattedMessage id="quiz.game.answers.modalCloseQuestion" />}
       onOk={handleRegisterRound}
       onCancel={handleCloseQuestion}
       closable={false}
@@ -157,9 +159,10 @@ const Answers = ({
       destroyOnClose
     >
       <Descriptions>
-        <Descriptions.Item label="Time left">{timeLeft}</Descriptions.Item>
-        <Descriptions.Item label="Answer">{question.answer}</Descriptions.Item>
-        <Descriptions.Item label="Points">{question.points}</Descriptions.Item>
+        <Descriptions.Item label={<FormattedMessage id="quiz.game.answers.questionTitle" />} span={3}>{question.title}</Descriptions.Item>
+        <Descriptions.Item label={<FormattedMessage id="quiz.game.answers.timeLeft" />}>{timeLeft}</Descriptions.Item>
+        <Descriptions.Item label={<FormattedMessage id="quiz.game.answers.answer" />}>{question.answer}</Descriptions.Item>
+        <Descriptions.Item label={<FormattedMessage id="quiz.game.answers.points" />}>{question.points}</Descriptions.Item>
       </Descriptions>
 
       {players.map(player => (
@@ -174,4 +177,4 @@ const Answers = ({
   );
 }
 
-export default Answers;
+export default injectIntl(Answers);

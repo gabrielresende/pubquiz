@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { FormattedMessage } from 'react-intl';
 import { Button, Modal, Table, Tooltip } from 'antd';
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, SendOutlined } from '@ant-design/icons';
 import Answers from './answers';
@@ -21,28 +22,26 @@ const Questions = ({
   roundAnswers,
   registerAnswers,
 }) => {
-  const [customQuestion, setCustomQuestion] = useState(undefined);
   const [questionModalVisible, setQuestionModalVisible] = useState(false);
   const [answersModalVisible, setAnswersModalVisible] = useState(false);
   const [question, setQuestion] = useState(undefined)
 
   function handleEditQuestion(questionData) {
-    console.log('questionData', questionData);
     setQuestion(questionData);
     setQuestionModalVisible(true);
   }
 
   function handleDeleteQuestion(questionData) {
     Modal.confirm({
-      title: 'Delete question?',
+      title: <FormattedMessage id="quiz.questions.confirmDeleteQuestionTitle" />,
       icon: <ExclamationCircleOutlined />,
-      content: 'Delete questions? This cannot be undone',
+      content: <FormattedMessage id="quiz.questions.confirmDeleteQuestionMessage" />,
       onOk() {
         updateQuestions({ type: 'delete', question: questionData });
       },
     });
   }
-  
+
   function handleSubmitQuestion(questionData) {
     const type = questionData.id ? 'edit' : 'add';
     updateQuestions({ type, question: questionData });
@@ -65,33 +64,33 @@ const Questions = ({
 
   const columns = [
     {
-      title: 'Title',
+      title: <FormattedMessage id="quiz.questions.table.title" />,
       dataIndex: 'title',
       key: 'title',
       ellipsis: true,
       width: "60%",
     },
     {
-      title: 'Answer',
+      title: <FormattedMessage id="quiz.questions.table.answer" />,
       dataIndex: 'answer',
       key: 'answer',
       ellipsis: true,
       width: "40%",
     },
     {
-      title: 'Pts',
+      title: <FormattedMessage id="quiz.questions.table.points" />,
       dataIndex: 'points',
       key: 'points',
       width: 60,
     },
     {
-      title: 't (s)',
+      title: <FormattedMessage id="quiz.questions.table.time" />,
       dataIndex: 'time',
       key: 'time',
       width: 60,
     },
     {
-      title: 'Sent',
+      title: <FormattedMessage id="quiz.questions.table.sent" />,
       dataIndex: 'sent',
       key: 'sent',
       width: 80,
@@ -100,12 +99,12 @@ const Questions = ({
       ),
     },
     {
-      title: 'Actions',
+      title: <FormattedMessage id="quiz.questions.table.actions" />,
       dataIndex: 'actions',
       width: 140,
       render: (_, record) => (
         <div>
-          <Tooltip title="Edit">
+          <Tooltip title={<FormattedMessage id="quiz.questions.table.actions.edit" />}>
             <Button
               type="dashed"
               shape="circle"
@@ -114,7 +113,7 @@ const Questions = ({
             />
           </Tooltip>
           <span style={{ display: 'inline-block', width: '5px' }}></span>
-          <Tooltip title="Delete">
+          <Tooltip title={<FormattedMessage id="quiz.questions.table.actions.delete" />}>
             <Button
               type="primary"
               shape="circle"
@@ -124,7 +123,7 @@ const Questions = ({
             />
           </Tooltip>
           <span style={{ display: 'inline-block', width: '5px' }}></span>
-          <Tooltip title="Send question">
+          <Tooltip title={<FormattedMessage id="quiz.questions.table.actions.send" />}>
             <Button
               type="primary"
               shape="circle"
@@ -140,12 +139,12 @@ const Questions = ({
   return (
     <div>
       <QuestionsTitle>
-        <h3>Questions</h3>
+        <h3>{<FormattedMessage id="quiz.questions.title" />}</h3>
         <div>
           <Button
             onClick={() => setQuestionModalVisible(true)}
           >
-            New question
+            {<FormattedMessage id="quiz.questions.newQuestion" />}
           </Button>
         </div>
       </QuestionsTitle>
@@ -154,17 +153,6 @@ const Questions = ({
         columns={columns}
         rowKey={record => record.id}
       />
-      <div>
-        <input
-          type="text"
-          onChange={e => setCustomQuestion(e.target.value)}
-        />
-        <button
-          onClick={() => handleSendQuestion({ id: 'open', title: customQuestion, time: 60 })}
-        >
-          Send question
-        </button>
-      </div>
       <QuestionModal
         visible={questionModalVisible}
         cancel={() => {

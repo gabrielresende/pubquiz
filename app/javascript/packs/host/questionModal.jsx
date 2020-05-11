@@ -1,21 +1,22 @@
 import React, { useEffect } from 'react';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Form, Input, InputNumber, Modal } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
-    sm: { span: 4 },
+    sm: { span: 6 },
   },
   wrapperCol: {
     xs: { span: 24 },
-    sm: { span: 20 },
+    sm: { span: 18 },
   },
 };
 const formItemLayoutWithOutLabel = {
   wrapperCol: {
     xs: { span: 24, offset: 0 },
-    sm: { span: 20, offset: 4 },
+    sm: { span: 20, offset: 6 },
   },
 };
 
@@ -24,6 +25,7 @@ const QuestionModal = ({
   submit,
   cancel,
   visible,
+  intl,
 }) => {
   const [form] = Form.useForm();
 
@@ -33,7 +35,7 @@ const QuestionModal = ({
       form.resetFields();
     }
   }, [initialQuestion]);
-  
+
   function handleSubmit() {
     form.validateFields()
     .then(values => submit({...initialQuestion, ...values}))
@@ -42,9 +44,13 @@ const QuestionModal = ({
 
   return (
     <Modal
-      title={initialQuestion ? 'Edit question' : 'New question'}
+      title={initialQuestion
+        ? <FormattedMessage id="quiz.questions.editQuestionTitle" />
+        : <FormattedMessage id="quiz.questions.newQuestionTitle" />}
       visible={visible}
-      okText='Create'
+      okText={initialQuestion
+        ? <FormattedMessage id="quiz.questions.edit" />
+        : <FormattedMessage id="quiz.questions.create" />}
       onOk={handleSubmit}
       onCancel={cancel}
       destroyOnClose
@@ -56,19 +62,19 @@ const QuestionModal = ({
         form={form}
         initialValues={initialQuestion}
       >
-        <Form.Item name="title" label="Title" rules={[{ required: true }]}>
+        <Form.Item name="title" label={<FormattedMessage id="quiz.questions.form.title" />} rules={[{ required: true }]}>
           <Input.TextArea />
         </Form.Item>
-        <Form.Item name="image_url" label="Image URL" rules={[{ type: 'url' }]}>
+        <Form.Item name="image_url" label={<FormattedMessage id="quiz.questions.form.imageUrl" />} rules={[{ type: 'url' }]}>
           <Input />
         </Form.Item>
-        <Form.Item name="points" label="Points" rules={[{ required: true, type: 'number', min: 0 }]}>
+        <Form.Item name="points" label={<FormattedMessage id="quiz.questions.form.points" />} rules={[{ required: true, type: 'number', min: 0 }]}>
           <InputNumber />
         </Form.Item>
-        <Form.Item name="time" label="Time (sec)" rules={[{ required: true, type: 'number', min: 5, max: 300 }]}>
+        <Form.Item name="time" label={<FormattedMessage id="quiz.questions.form.time" />} rules={[{ required: true, type: 'number', min: 5, max: 300 }]}>
           <InputNumber />
         </Form.Item>
-        <Form.Item name="answer" label="Answer" rules={[{ required: true }]}>
+        <Form.Item name="answer" label={<FormattedMessage id="quiz.questions.form.answer" />} rules={[{ required: true }]}>
           <Input />
         </Form.Item>
         <Form.List name="options">
@@ -78,7 +84,7 @@ const QuestionModal = ({
                 {fields.map((field, index) => (
                   <Form.Item
                     {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                    label={index === 0 ? 'Options' : ''}
+                    label={index === 0 ? <FormattedMessage id="quiz.questions.form.options" /> : ''}
                     required={false}
                     key={field.key}
                   >
@@ -89,12 +95,12 @@ const QuestionModal = ({
                         {
                           required: true,
                           whitespace: true,
-                          message: "Please enter option or delete this field.",
+                          message: <FormattedMessage id="quiz.questions.form.options.enterOrDeleteField" />,
                         },
                       ]}
                       noStyle
                     >
-                      <Input placeholder="Option" style={{ width: '60%' }} />
+                      <Input placeholder={intl.formatMessage({ id: "quiz.questions.form.option" })} style={{ width: '60%' }} />
                     </Form.Item>
                     <MinusCircleOutlined
                       className="dynamic-delete-button"
@@ -113,7 +119,7 @@ const QuestionModal = ({
                     }}
                     style={{ width: '60%' }}
                   >
-                    <PlusOutlined /> Add option
+                    <PlusOutlined /> <FormattedMessage id="quiz.questions.form.addOption" />
                   </Button>
                 </Form.Item>
               </div>
@@ -125,4 +131,4 @@ const QuestionModal = ({
   );
 }
 
-export default QuestionModal;
+export default injectIntl(QuestionModal);

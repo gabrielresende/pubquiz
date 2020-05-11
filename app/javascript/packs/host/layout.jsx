@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { FormattedMessage } from 'react-intl';
 import { Col, Row } from 'antd';
 import Questions from './questions';
 import Players from './players';
@@ -49,7 +50,7 @@ const PageLayout = ({
 }) => {
   return (
     <PageContainer>
-      <TopBar><Logo>Pub Quiz</Logo></TopBar>
+      <TopBar><Logo><FormattedMessage id="title" /></Logo></TopBar>
       <QuizContainer>
         <PageHeader
           ghost={false}

@@ -1,6 +1,7 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Layout from './layout';
+import TranslationRoot from './translations';
 
 import { createConsumer } from "@rails/actioncable"
 const CableApp = {};
@@ -168,15 +169,17 @@ document.addEventListener('DOMContentLoaded', () => {
   reactRoot.setAttribute("id", "root")
 
   ReactDOM.render(
-    <Host
-      cableApp={CableApp}
-      playUrl={playUrl}
-      quizAnswers={quizAnswers}
-      quizId={quizId}
-      quizName={quizName}
-      quizPlayers={quizPlayers}
-      quizQuestions={quizQuestions}
-    />,
+    <TranslationRoot>
+      <Host
+        cableApp={CableApp}
+        playUrl={playUrl}
+        quizAnswers={quizAnswers}
+        quizId={quizId}
+        quizName={quizName}
+        quizPlayers={quizPlayers}
+        quizQuestions={quizQuestions}
+      />
+    </TranslationRoot>,
     reactRoot,
   )
 })
