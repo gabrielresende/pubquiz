@@ -1,10 +1,11 @@
 en:
   hello: "Hello world"
   home:
-    create_and_have_fun: "Promote an online Pub Quiz and have fun with your friends."
+    promote_virtual_quiz: "Promote a virtual quiz"
+    have_fun_with_friends: "and have fun online with your friends"
     my_quizzes: "My quizzes"
     delete: "Delete"
     are_you_sure: "Are you sure?"
     new_quiz: "New quiz"
     quiz_name: "Quiz name"
-    create: "Create"
+    create: "Create quiz"

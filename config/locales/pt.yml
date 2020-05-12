@@ -1,10 +1,11 @@
 pt:
   hello: "Olá mundo"
   home:
-    create_and_have_fun: "Promova um Pub Quiz online e divirta-se com seus amigos."
+    promote_virtual_quiz: "Promova um quiz virtual"
+    have_fun_with_friends: "e divirta-se online com seus amigos"
     my_quizzes: "Meus quizzes"
     delete: "Deletar"
     are_you_sure: "Tem certeza?"
     new_quiz: "Novo quiz"
     quiz_name: "Nome do quiz"
-    create: "Criar"
+    create: "Criar quiz"

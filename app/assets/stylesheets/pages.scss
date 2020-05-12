@@ -1,9 +1,14 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito:300,400,700&display=swap');
 
+html, body {
+  height: 100%;
+}
+
 body {
   background-color: #fefefe;
   color: #333;
   font-family: 'Nunito', sans-serif;
+  margin: 0,
 }
 
 input, button {
@@ -11,9 +16,80 @@ input, button {
   font-size: 12pt;
 }
 
-#root {
-  min-height: 100vh;
+.container {
   display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 1140px;
+  margin: 0px auto;
+}
+
+.hero-container {
+  flex-grow: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.title {
+  margin: 20px auto;
+  text-align: center;
+  font-size: 18pt;
+  font-weight: bold;
+  color: #0e5596;
+}
+
+.home-form {
+  max-width: 320px;
+  margin-top: 40px;
+}
+
+.hero-item {
+  flex-basis: 380px;
+  flex-grow: 1;
+}
+
+.hero-title {
+  margin-top: 2rem;
+  margin-bottom: 0.2rem;
+  font-size: 20pt;
+  color: #444444;
+}
+
+.footer {
+  text-align: center;
+  color: #eee;
+  padding: 40px 0;
+}
+
+@media (max-width: 768px) {
+  body {
+    margin: 20px;
+  }
+
+  .home-form {
+    max-width: 100%;
+    margin: 40px 0;
+  }
+
+  .hero-container {
+    flex-grow: inherit;
+  }
+}
+
+@media (min-width: 1000px) {
+  .title {
+    padding: 40px 0;
+  }
+
+  .hero-title {
+    margin-top: 0;
+    font-size: 30pt;
+  }
+
+  .home-form {
+    max-width: 400px;
+  }
 }
 
 .inline-form {
@@ -75,8 +151,5 @@ input, button {
   border-radius: 2px;
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
-}
-
-.home-form {
-  max-width: 400px;
+  box-shadow: 0 6px 50px 8px rgba(24, 144, 255, 0.15);
 }

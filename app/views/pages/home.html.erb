@@ -1,13 +1,28 @@
-<h1>Pub Quiz</h1>
-<p><%= t 'home.create_and_have_fun' %></p>
+<div class="container">
+  <div class="title">Pub Quiz</div>
 
-<% if @owned_quizzes.any? %>
-  <h3><%= t 'home.my_quizzes' %></h3>
-  <ul>
-    <% @owned_quizzes.each do |quiz| %>
-      <li><%= link_to quiz.name, quiz %> (<%= link_to I18n.t('home.delete'), quiz, method: :delete, data: { confirm: I18n.t('home.are_you_sure') } %>)</li>
-    <% end %>
-  </ul>
-<% end %>
+  <div class="hero-container">
+    <div class="hero-item" style="text-align: center;">
+      <%= image_tag "illustration.png", width: "80%" %>
+    </div>
+    <div class="hero-item">
+      <h2 class="hero-title"><%= t 'home.promote_virtual_quiz' %></h2>
+      <span style="color: #a1a1a1; font-weight: 300;"><%= t 'home.have_fun_with_friends' %></span>
 
-<%= render 'pages/form', quiz: @quiz %>
+      <% if @owned_quizzes.any? %>
+        <h3><%= t 'home.my_quizzes' %></h3>
+        <ul>
+          <% @owned_quizzes.each do |quiz| %>
+            <li><%= link_to quiz.name, quiz %> (<%= link_to I18n.t('home.delete'), quiz, method: :delete, data: { confirm: I18n.t('home.are_you_sure') } %>)</li>
+          <% end %>
+        </ul>
+      <% end %>
+
+      <%= render 'pages/form', quiz: @quiz %>
+    </div>
+  </div>
+
+  <div class="footer">
+    🧠 2020
+  </div>
+</div>
