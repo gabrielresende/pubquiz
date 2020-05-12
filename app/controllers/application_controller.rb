@@ -16,13 +16,11 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locale(&action)
-    locale = request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}/).first
+    locale = request.env['HTTP_ACCEPT_LANGUAGE']&.scan(/^[a-z]{2}/)&.first
 
     if locale && I18n.available_locales.include?(locale.to_sym)
-      puts 'locale BR'
       I18n.with_locale(locale, &action)
     else
-      puts 'locale default ' + I18n.default_locale.to_s
       I18n.with_locale(I18n.default_locale, &action)
     end
   end
