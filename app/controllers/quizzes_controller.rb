@@ -34,7 +34,7 @@ class QuizzesController < ApplicationController
   # DELETE /quizzes/1
   # DELETE /quizzes/1.json
   def destroy
-    @quiz.destroy
+    @quiz.update(deleted_at: Time.current)
     respond_to do |format|
       format.html { redirect_to root_url, notice: 'Quiz was successfully destroyed.' }
       format.json { head :no_content }
@@ -44,11 +44,11 @@ class QuizzesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_quiz
-      @quiz = current_user.owned_quizzes.find(params[:id])
+      @quiz = current_user.owned_quizzes.undeleted.find(params[:id])
     end
 
     def set_play_quiz
-      @quiz = Quiz.find(params[:id])
+      @quiz = Quiz.undeleted.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
