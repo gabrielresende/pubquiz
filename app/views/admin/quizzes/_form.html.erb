@@ -1,4 +1,4 @@
-<%= form_with(model: quiz, local: true) do |form| %>
+<%= form_with(model: [:admin, quiz], local: true) do |form| %>
   <% if quiz.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(quiz.errors.count, "error") %> prohibited this quiz from being saved:</h2>

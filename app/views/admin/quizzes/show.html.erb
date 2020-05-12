@@ -1,0 +1,23 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @quiz.name %>
+</p>
+
+<p>
+  <strong>Owner:</strong>
+  <%= @quiz.owner.name %>
+</p>
+
+<p>
+  <strong>Questions:</strong>
+</p>
+<ul>
+  <% @quiz.questions.map do |question| %>
+    <li><%= question['title'] %></li>
+  <% end %>
+</ul>
+
+<%= link_to 'Edit', edit_admin_quiz_path(@quiz) %> |
+<%= link_to 'Back', admin_quizzes_path %>
