@@ -3,12 +3,12 @@ import styled from 'styled-components';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Modal, Table, Tooltip } from 'antd';
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, SendOutlined } from '@ant-design/icons';
-import Answers from './answers';
+import Round from './round';
 import QuestionModal from './questionModal';
 
 const QuestionsTitle = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-bottom: 20px;
 `;
@@ -24,7 +24,7 @@ const Questions = ({
   registerAnswers,
 }) => {
   const [questionModalVisible, setQuestionModalVisible] = useState(false);
-  const [answersModalVisible, setAnswersModalVisible] = useState(false);
+  const [roundModalVisible, setRoundModalVisible] = useState(false);
   const [question, setQuestion] = useState(undefined)
 
   function handleNewQuestion() {
@@ -59,7 +59,7 @@ const Questions = ({
     const { answer, ...rawQuestion } = question;
     sendQuestion(rawQuestion);
     setQuestion({...question, sent_at: Date.now});
-    setAnswersModalVisible(true);
+    setRoundModalVisible(true);
     updateQuestions({type: 'edit', question: { ...question, sent_at: Date.now() }});
   }
 
@@ -145,17 +145,15 @@ const Questions = ({
   return (
     <div>
       <QuestionsTitle>
-        <h3>{<FormattedMessage id="quiz.questions.title" />}</h3>
-        <div>
-          <Button onClick={handleNewQuestion}>
-            {<FormattedMessage id="quiz.questions.newQuestion" />}
-          </Button>
-        </div>
+        <Button onClick={handleNewQuestion}>
+          {<FormattedMessage id="quiz.questions.newQuestion" />}
+        </Button>
       </QuestionsTitle>
       <Table
         dataSource={questions}
         columns={columns}
         rowKey={record => record.id}
+        size="small"
       />
       <QuestionModal
         visible={questionModalVisible}
@@ -166,11 +164,11 @@ const Questions = ({
         initialQuestion={question}
         submit={handleSubmitQuestion}
       />
-      {answersModalVisible
+      {roundModalVisible
         ? (
-          <Answers
-            visible={answersModalVisible}
-            hideModal={() => setAnswersModalVisible(false)}
+          <Round
+            visible={roundModalVisible}
+            hideModal={() => setRoundModalVisible(false)}
             question={question}
             players={players}
             roundAnswers={roundAnswers}

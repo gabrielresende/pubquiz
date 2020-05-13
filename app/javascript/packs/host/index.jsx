@@ -64,13 +64,13 @@ const Host = ({
     let newPlayers;
     switch (action.type) {
       case 'add':
-        return [action.payload, ...state.filter(item => item.player_id !== action.payload.player_id)];
+        return [action.payload, ...state.filter(item => item.player_id !== action.payload.player_id)].sort((a,b) => a.player_name.localeCompare(b.player_name));
       case 'remove':
         newPlayers = [...state.filter(item => item.player_id !== action.playerId)];
         cableApp.quiz.perform("remove_player", { player_id: action.playerId });
         return newPlayers;
       case 'reset':
-        return action.payload;
+        return action.payload.sort((a,b) => a.player_name.localeCompare(b.player_name));
       default:
         throw new Error();
     }
@@ -142,6 +142,7 @@ const Host = ({
 
   return (
     <Layout
+      answers={answers}
       closeQuestion={closeQuestion}
       players={players}
       playUrl={playUrl}

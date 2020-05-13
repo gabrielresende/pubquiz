@@ -20,7 +20,7 @@
   "quiz.players.remove": "Remove",
   "quiz.players.remove.modalTitle": "Remove player?",
   "quiz.players.remove.modalMessage": "Are you sure you want to remove this player?",
-  "quiz.questions.title": "Questions",
+  "quiz.questions.tab": "Questions",
   "quiz.questions.newQuestion": "New question",
   "quiz.questions.sendQuestion": "Send question",
   "quiz.questions.editQuestionTitle": "Edit question",
@@ -47,5 +47,9 @@
   "quiz.questions.table.actions.edit": "Edit",
   "quiz.questions.table.actions.delete": "Delete",
   "quiz.questions.table.actions.send": "Send question",
+  "quiz.answers.tab": "Answers",
+  "quiz.answers.table.player": "Player",
+  "quiz.answers.table.answer": "Answer",
+  "quiz.answers.table.points": "pts",
   "nothing": "."
 }
