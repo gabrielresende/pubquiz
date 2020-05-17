@@ -30,7 +30,7 @@ const Host = ({
   const [score, setScore] = useState([]);
   const [players, updatePlayer] = useReducer(playerReducer, quizPlayers);
   const [questions, updateQuestions] = useReducer(questionReducer, quizQuestions);
-  const [roundAnswers, updateRoundAnswer] = useReducer(playerReducer, quizPlayers);
+  const [roundAnswers, updateRoundAnswer] = useReducer(roundAnswersReducer, quizPlayers);
 
   function questionReducer(state, action) {
     let newQuestions;
@@ -75,6 +75,23 @@ const Host = ({
         throw new Error();
     }
   }
+
+  function roundAnswersReducer(state, action) {
+    let newPlayers;
+    switch (action.type) {
+      case 'add':
+        return [action.payload, ...state.filter(item => item.player_id !== action.payload.player_id)];
+      case 'remove':
+        newPlayers = [...state.filter(item => item.player_id !== action.playerId)];
+        cableApp.quiz.perform("remove_player", { player_id: action.playerId });
+        return newPlayers;
+      case 'reset':
+        return action.payload;
+      default:
+        throw new Error();
+    }
+  }
+
 
   useEffect(() => {
     cableApp.quiz = cableApp.cable.subscriptions.create(
