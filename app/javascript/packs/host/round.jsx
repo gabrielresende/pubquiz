@@ -101,15 +101,18 @@ const Answers = ({
     setPoints({...points, [playerId]: value});
   }
 
-  function processRound() {
-    return roundAnswers.map(answer => (
-      {
+  function roundData() {
+    return {
+      question_id: question.id,
+      question_title: question.title,
+      answer: question.answer,
+      points: question.points,
+      answers: roundAnswers.map(answer => ({
         player_id: answer.player_id,
-        question_id: question.id,
         answer: answer.answer,
         points: points[answer.player_id] || 0,
-      }
-    ));
+      }))
+    };
   }
 
   function handleRegisterRound() {
@@ -129,7 +132,7 @@ const Answers = ({
   }
 
   function registerRound() {
-    registerAnswers(processRound());
+    registerAnswers(roundData());
     closeQuestion();
     hideModal();
   }

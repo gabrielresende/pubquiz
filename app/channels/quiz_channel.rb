@@ -43,9 +43,9 @@ class QuizChannel < ApplicationCable::Channel
     end
   end
 
-  def update_answers(data)
+  def update_rounds(data)
     if quiz.owner == current_user
-      quiz.answers = data['answers']
+      quiz.rounds = data['rounds']
       quiz.save
     end
   end

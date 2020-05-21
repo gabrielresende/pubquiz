@@ -1,16 +1,7 @@
 import React, {useRef} from 'react';
-import styled from 'styled-components';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Input, message, Popover } from 'antd';
 import { CopyOutlined, DownOutlined } from '@ant-design/icons';
-
-const PlayerAvatarName = styled.div`
-  display: flex;
-  align-items: center;
-  flex: 1;
-  overflow: hidden;
-  height: 24pt;
-`;
 
 const OpenQuizButton = ({ link }) => (
   <Button

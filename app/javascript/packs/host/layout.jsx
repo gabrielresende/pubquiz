@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
 import { Col, Row, Tabs } from 'antd';
 import Questions from './questions';
-import Answers from './answers';
+import Rounds from './rounds';
 import Players from './players';
 
 import { OpenQuizButton, ShareLinkButton } from './components/quizOperations';
@@ -37,7 +37,6 @@ const QuizDetails = styled.div`
 `;
 
 const PageLayout = ({
-  answers,
   closeQuestion,
   players,
   playUrl,
@@ -47,6 +46,7 @@ const PageLayout = ({
   removePlayer,
   roundAnswers,
   score,
+  rounds,
   sendQuestion,
   updateQuestions,
 }) => {
@@ -85,9 +85,9 @@ const PageLayout = ({
                     registerAnswers={registerAnswers}
                   />
                 </Tabs.TabPane>
-                <Tabs.TabPane tab={<FormattedMessage id="quiz.answers.tab" />} key="2">
-                  <Answers
-                    answers={answers}
+                <Tabs.TabPane tab={<FormattedMessage id="quiz.rounds.tab" />} key="2">
+                  <Rounds
+                    rounds={rounds}
                     players={players}
                     questions={questions}
                   />

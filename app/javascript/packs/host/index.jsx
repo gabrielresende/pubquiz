@@ -2,34 +2,25 @@ import React, { useEffect, useReducer, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Layout from './layout';
 import TranslationRoot from './translations';
+import { createUUID } from './utils';
 
 import { createConsumer } from "@rails/actioncable"
 const CableApp = {};
 CableApp.cable = createConsumer();
 
-function createUUID(){
-  var dt = new Date().getTime();
-  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = (dt + Math.random()*16)%16 | 0;
-      dt = Math.floor(dt/16);
-      return (c=='x' ? r :(r&0x3|0x8)).toString(16);
-  });
-  return uuid;
-}
-
 const Host = ({
   cableApp,
   playUrl,
-  quizAnswers,
   quizId,
   quizName,
   quizPlayers,
+  quizRounds,
   quizQuestions
 }) => {
-  const [answers, setAnswers] = useState(quizAnswers);
   const [score, setScore] = useState([]);
   const [players, updatePlayer] = useReducer(playerReducer, quizPlayers);
   const [questions, updateQuestions] = useReducer(questionReducer, quizQuestions);
+  const [rounds, updateRounds] = useReducer(roundsReducer, quizRounds);
   const [roundAnswers, updateRoundAnswer] = useReducer(roundAnswersReducer, quizPlayers);
 
   function questionReducer(state, action) {
@@ -76,6 +67,34 @@ const Host = ({
     }
   }
 
+  function roundsReducer(state, action) {
+    let newRounds;
+    switch (action.type) {
+      case 'add':
+        newRounds = [...state, { id: createUUID(), ...action.round }];
+        cableApp.quiz.perform("update_rounds", { rounds: newRounds });
+        return newRounds;
+      case 'edit':
+        newRounds = state.map(round => {
+          if (round.id !== action.round.id) {
+            return round;
+          } else {
+            return action.round;
+          }
+        });
+        cableApp.quiz.perform("update_rounds", { rounds: newRounds });
+        return newRounds;
+      case 'delete':
+          newRounds = [...state.filter(round => round.id !== action.round.id)];
+          cableApp.quiz.perform("update_rounds", { rounds: newRounds });
+          return newRounds;
+      case 'reset':
+        return [action.rounds];
+      default:
+        throw new Error();
+    }
+  }
+
   function roundAnswersReducer(state, action) {
     let newPlayers;
     switch (action.type) {
@@ -92,7 +111,6 @@ const Host = ({
     }
   }
 
-
   useEffect(() => {
     cableApp.quiz = cableApp.cable.subscriptions.create(
       { channel: "QuizChannel", id: quizId },
@@ -101,12 +119,15 @@ const Host = ({
   }, []);
 
   useEffect(() => {
-    const newScore = answers.map(answer => ({
-      player_id: answer.player_id,
-      score: answer.answers.reduce((sum, item) => sum + item.points, 0)
+    const newScore = players.map(player => ({
+      player_id: player.player_id,
+      score: rounds.reduce((sum, round) => {
+        const answer = round.answers.find(answer => answer.player_id === player.player_id);
+        return sum + (answer && answer.points || 0);
+      }, 0)
     }));
     setScore(newScore);
-  }, [answers]);
+  }, [rounds]);
 
   function handleDataReceived(data) {
     if (data.data_type == 'player') {
@@ -132,34 +153,11 @@ const Host = ({
   }
 
   function registerAnswers(roundData) {
-    const newAnswers = [...answers];
-    roundData.forEach(data => {
-      const ansObj = newAnswers.find(item => item.player_id === data.player_id);
-      if (ansObj) {
-        ansObj['answers'].push({
-          question_id: data.question_id,
-          answer: data.answer,
-          points: data.points,
-        })
-      } else {
-        newAnswers.push({
-          player_id: data.player_id,
-          answers: [{
-            question_id: data.question_id,
-            answer: data.answer,
-            points: data.points,
-          }]
-        })
-      }
-    });
-
-    cableApp.quiz.perform("update_answers", { answers: newAnswers });
-    setAnswers(newAnswers);
+    updateRounds({type: 'add', round: roundData});
   }
 
   return (
     <Layout
-      answers={answers}
       closeQuestion={closeQuestion}
       players={players}
       playUrl={playUrl}
@@ -168,6 +166,7 @@ const Host = ({
       registerAnswers={registerAnswers}
       removePlayer={removePlayer}
       roundAnswers={roundAnswers}
+      rounds={rounds}
       score={score}
       sendQuestion={sendQuestion}
       updateQuestions={updateQuestions}
@@ -178,10 +177,10 @@ const Host = ({
 document.addEventListener('DOMContentLoaded', () => {
   const node = document.getElementById('gameinfo');
   const playUrl = node.getAttribute('play_url');
-  const quizAnswers = JSON.parse(node.getAttribute('quiz_answers'));
   const quizId = node.getAttribute('quiz_id');
   const quizName = node.getAttribute('quiz_name');
   const quizPlayers = JSON.parse(node.getAttribute('quiz_players'));
+  const quizRounds = JSON.parse(node.getAttribute('quiz_rounds'));
   const quizQuestions = JSON.parse(node.getAttribute('quiz_questions'));
   const reactRoot = document.body.appendChild(document.createElement('div'))
   reactRoot.setAttribute("id", "root")
@@ -191,10 +190,10 @@ document.addEventListener('DOMContentLoaded', () => {
       <Host
         cableApp={CableApp}
         playUrl={playUrl}
-        quizAnswers={quizAnswers}
         quizId={quizId}
         quizName={quizName}
         quizPlayers={quizPlayers}
+        quizRounds={quizRounds}
         quizQuestions={quizQuestions}
       />
     </TranslationRoot>,

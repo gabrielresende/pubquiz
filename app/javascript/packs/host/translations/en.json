@@ -47,9 +47,10 @@
   "quiz.questions.table.actions.edit": "Edit",
   "quiz.questions.table.actions.delete": "Delete",
   "quiz.questions.table.actions.send": "Send question",
-  "quiz.answers.tab": "Answers",
-  "quiz.answers.table.player": "Player",
-  "quiz.answers.table.answer": "Answer",
-  "quiz.answers.table.points": "pts",
+  "quiz.rounds.tab": "Rounds",
+  "quiz.rounds.empty": "No rounds yet",
+  "quiz.rounds.table.player": "Player",
+  "quiz.rounds.table.answer": "Answer",
+  "quiz.rounds.table.points": "pts",
   "nothing": "."
 }
