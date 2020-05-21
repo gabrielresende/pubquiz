@@ -19,6 +19,12 @@ const PageContainer = styled.div`
   }
 `;
 
+const QuizHeader = styled(PageHeader)`
+  border-bottom: 1px solid #eee;
+  border-top: 1px solid #eee;
+  box-shadow: 0px 1px 3px rgba(0,0,0,0.05);
+`;
+
 const TopBar = styled.div`
   background: #fff;
   padding: 20px;
@@ -29,11 +35,8 @@ const Logo = styled.span`
   font-weight: bold;
 `;
 
-const QuizContainer = styled.div`
-`;
-
-const QuizDetails = styled.div`
-  padding: 16px 24px;
+const ContentContainer = styled.div`
+  padding: 16px;
 `;
 
 const PageLayout = ({
@@ -53,8 +56,8 @@ const PageLayout = ({
   return (
     <PageContainer>
       <TopBar><Logo><FormattedMessage id="title" /></Logo></TopBar>
-      <QuizContainer>
-        <PageHeader
+      <div>
+        <QuizHeader
           ghost={false}
           onBack={() => {window.location.href = '/'}}
           title={quizName}
@@ -63,16 +66,16 @@ const PageLayout = ({
             <ShareLinkButton key="shareLink" link={playUrl} />
           ]}
         />
-        <QuizDetails>
-          <Row gutter={16}>
-            <Col sm={6} xs={24}>
-              <Players
-                players={players}
-                score={score}
-                removePlayer={removePlayer}
-              />
-            </Col>
-            <Col sm={18} xs={24}>
+        <Row>
+          <Col sm={6} xs={24}>
+            <Players
+              players={players}
+              score={score}
+              removePlayer={removePlayer}
+            />
+          </Col>
+          <Col sm={18} xs={24}>
+            <ContentContainer>
               <Tabs>
                 <Tabs.TabPane tab={<FormattedMessage id="quiz.questions.tab" />} key="1">
                   <Questions
@@ -93,10 +96,10 @@ const PageLayout = ({
                   />
                 </Tabs.TabPane>
               </Tabs>
-            </Col>
-          </Row>
-        </QuizDetails>
-      </QuizContainer>
+            </ContentContainer>
+          </Col>
+        </Row>
+      </div>
     </PageContainer>
   );
 }

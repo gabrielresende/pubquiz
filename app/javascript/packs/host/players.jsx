@@ -12,6 +12,7 @@ const Container = styled.div`
     border-right: 1px solid #eee;
   }
   height: 100%;
+  padding: 16px;
 `;
 
 const PlayerContainer = styled.div`
@@ -29,10 +30,6 @@ const PlayerScore = styled.span`
   text-align: right;
 `;
 
-const PlayerActions = styled.div`
-  margin-right: 10px;
-`;
-
 const PlayerComponent = ({ intl, player, removePlayer, score }) => (
   <PlayerContainer>
     <PlayerAvatarName>
@@ -40,7 +37,7 @@ const PlayerComponent = ({ intl, player, removePlayer, score }) => (
       <PlayerName>{player.player_name}</PlayerName>
       <PlayerScore>{score}</PlayerScore>
     </PlayerAvatarName>
-    <PlayerActions>
+    <div>
       <Tooltip title={<FormattedMessage id="quiz.players.remove" />}>
         <Button
           type="link"
@@ -56,7 +53,7 @@ const PlayerComponent = ({ intl, player, removePlayer, score }) => (
           })}
         />
       </Tooltip>
-    </PlayerActions>
+    </div>
   </PlayerContainer>
 );
 
