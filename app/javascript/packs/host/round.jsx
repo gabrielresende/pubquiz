@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { Descriptions, Modal, Input, InputNumber } from 'antd';
+import { Descriptions, Modal, Input, InputNumber, Progress } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { PlayerAvatarName, PlayerBadge, PlayerName } from './components';
 
@@ -70,22 +70,24 @@ const Answers = ({
   visible,
   registerAnswers,
 }) => {
-  const duration = (question.time || 60) * 1000
+  const duration = (question.time || 60) * 1000;
   const [points, setPoints] = useState({});
   const [expiration, setExpiration] = useState(Date.now() + duration);
   const [timeLeft, setTimeLeft] = useState(formatTime(expiration - Date.now()));
+  const [percentage, setPercentage] = useState(100);
 
   useEffect(() => {
     const interval = setInterval(() => {
       const elapsed = expiration - Date.now();
 
       setTimeLeft(formatTime(elapsed));
+      setPercentage(elapsed / duration * 100);
 
       if (elapsed < 0) {
         setTimeLeft('0:00');
         clearInterval(interval);
       }
-    }, 1000);
+    }, 50);
 
     return () => clearInterval(interval);
   }, []);
@@ -161,9 +163,9 @@ const Answers = ({
       maskClosable={false}
       destroyOnClose
     >
+      <Progress percent={percentage} format={() => timeLeft} size="small" style={{ marginBottom: '18px' }} />
       <Descriptions>
         <Descriptions.Item label={<FormattedMessage id="quiz.game.answers.questionTitle" />} span={3}>{question.title}</Descriptions.Item>
-        <Descriptions.Item label={<FormattedMessage id="quiz.game.answers.timeLeft" />}>{timeLeft}</Descriptions.Item>
         <Descriptions.Item label={<FormattedMessage id="quiz.game.answers.answer" />}>{question.answer}</Descriptions.Item>
         <Descriptions.Item label={<FormattedMessage id="quiz.game.answers.points" />}>{question.points}</Descriptions.Item>
       </Descriptions>
