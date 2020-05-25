@@ -1,7 +1,7 @@
 en:
   hello: "Hello world"
   home:
-    promote_virtual_quiz: "Promote a virtual quiz"
+    promote_virtual_quiz: "Host a virtual quiz"
     have_fun_with_friends: "and have fun online with your friends"
     my_quizzes: "My quizzes"
     delete: "Delete"
