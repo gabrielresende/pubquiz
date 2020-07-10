@@ -1,24 +1,48 @@
-# README
+# PubQuiz
+Create and host online quizzes. Check it live [here](https://quiz.gabriel.re).
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+![Demo Animation](../assets/demo.gif?raw=true)
 
-Things you may want to cover:
+## About
+PubQuiz is a web application developed using Ruby on Rails and React. It was a playground project to learn more about ActiveCable and websockets in Rails/React and have fun with my family and friends.
 
-* Ruby version
+### Creating a quiz
+1. Create a new quiz
+2. Add questions
+3. Share link with participants
 
-* System dependencies
+### Hosting a quiz
+1. Wait participants to join
+2. Send questions
+3. Assign points and save round
 
-* Configuration
+## Getting started
+### Prerequisites
+- Ruby 2.6.0
+- Bundler (`gem install bundler`)
+- libpq-dev (`sudo apt install libpq-dev`)
+- Node >= 8.16.0 (`sudo apt install nodejs`)
+- Yarn (`sudo apt-get install yarn`)
+- PostgreSQL
 
-* Database creation
+### Setup
+1. Clone the repository
+2. Install the dependencies
+```
+$ bundle install
+$ yarn install
+```
+3. Create the database with a superuser role (required for pgcrypto extension) and run the migrations
+```
+$ rails db:create
+$ rails db:migrate
+```
+4. Run the server
+```
+$ rails s
+```
 
-* Database initialization
+Open it in http://localhost:3000
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+### Running tests
+Oops... Sorry about that!

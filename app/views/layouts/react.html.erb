@@ -6,13 +6,13 @@
     <%= csp_meta_tag %>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1.0, user-scalable=no">
     <% if Rails.env.production? %>
-      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-86097288-2"></script>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=<%= ENV['GOOGLE_ANALYTICS_UA'] %>"></script>
       <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
 
-        gtag('config', 'UA-86097288-2');
+        gtag('config', '<%= ENV['GOOGLE_ANALYTICS_UA'] %>');
       </script>
     <% end %>
     <%= favicon_link_tag asset_path('icon.png') %>
