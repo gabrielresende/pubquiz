@@ -1,5 +1,5 @@
 # PubQuiz
-Create and host online quizzes. Check it live [here](https://quiz.gabriel.re).
+Create and host online quizzes.
 
 ![Demo Animation](../assets/demo.gif?raw=true)
 
